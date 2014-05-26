@@ -47,7 +47,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   servo_polulu.msg
+   servo_pololu.msg
 #   animate.msg
 #   Message2.msg
  )
@@ -55,7 +55,7 @@ add_message_files(
 ## Generate services in the 'srv' folder
 add_service_files(
    FILES
-   polulu_state.srv
+   pololu_state.srv
 #   Service2.srv
  )
 
@@ -111,7 +111,7 @@ add_executable(ros_pololu_servo_node src/ros_pololu_servo_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(ros_pololu_servo_node servo_polulu.h polulu_state.h)
+add_dependencies(ros_pololu_servo_node servo_pololu.h pololu_state.h)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(ros_pololu_servo_node

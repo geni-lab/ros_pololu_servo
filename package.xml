@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>ros_polulu_servo</name>
+  <name>ros_pololu_servo</name>
   <version>0.0.0</version>
   <description>The ros_pololu_servo package</description>
 

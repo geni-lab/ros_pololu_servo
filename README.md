@@ -1,4 +1,4 @@
-ros_polulu_servo
+ros_pololu_servo
 ================
 
-ros catkin package for polulu servo controller board. Based on polstro 
+ros catkin package for pololu servo controller board. Based on polstro 
