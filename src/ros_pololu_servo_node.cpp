@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include <servo_pololu.h>
-#include <pololu_state.h>
+#include <ros_pololu_servo/servo_pololu.h>
+#include <ros_pololu_servo/pololu_state.h>
 #include "PolstroSerialInterface.h"
 
 const unsigned int baudRate = 9600;
