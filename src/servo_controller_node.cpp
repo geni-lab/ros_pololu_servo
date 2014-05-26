@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include <servo_controller/servo_polulu.h>
-#include <servo_controller/polulu_state.h>
+#include <servo_polulu.h>
+#include <polulu_state.h>
 #include "PolstroSerialInterface.h"
 
 const unsigned int baudRate = 9600;
@@ -11,10 +11,10 @@ const unsigned int channelValueRange = channelMaxValue - channelMinValue;
 const unsigned int signalPeriodInMs = 2000;
 Polstro::SerialInterface* serialInterface;
 std::string portName = "/dev/ttyACM0";
-servo_controller::servo_polulu msgTemp,msgs;
+ros_pololu_servo::servo_polulu msgTemp,msgs;
 
-bool status(servo_controller::polulu_state::Request  &req, 
-servo_controller::polulu_state::Response &res)
+bool status(ros_pololu_servo::polulu_state::Request  &req, 
+ros_pololu_servo::polulu_state::Response &res)
 {
 	//
 	unsigned char channelNumber=req.qid;
@@ -28,7 +28,7 @@ servo_controller::polulu_state::Response &res)
 }
 
 
-void CommandCallback(const servo_controller::servo_polulu::ConstPtr& msg)
+void CommandCallback(const ros_pololu_servo::servo_polulu::ConstPtr& msg)
 {
 	//ROS_INFO("I heard: [%s]", msg->data.c_str());
 	//msgTemp=(*msg);
