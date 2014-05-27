@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include <servo_controller/servo_polulu.h>
-#include <servo_controller/polulu_state.h>
+#include <ros_pololu_servo/servo_pololu.h>
+#include <ros_pololu_servo/pololu_state.h>
 #include "PolstroSerialInterface.h"
 
 const unsigned int baudRate = 9600;
@@ -11,10 +11,10 @@ const unsigned int channelValueRange = channelMaxValue - channelMinValue;
 const unsigned int signalPeriodInMs = 2000;
 Polstro::SerialInterface* serialInterface;
 std::string portName = "/dev/ttyACM0";
-servo_controller::servo_polulu msgTemp,msgs;
+ros_pololu_servo::servo_pololu msgTemp,msgs;
 
-bool status(servo_controller::polulu_state::Request  &req, 
-servo_controller::polulu_state::Response &res)
+bool status(ros_pololu_servo::pololu_state::Request  &req, 
+ros_pololu_servo::pololu_state::Response &res)
 {
 	//
 	unsigned char channelNumber=req.qid;
@@ -28,7 +28,7 @@ servo_controller::polulu_state::Response &res)
 }
 
 
-void CommandCallback(const servo_controller::servo_polulu::ConstPtr& msg)
+void CommandCallback(const ros_pololu_servo::servo_pololu::ConstPtr& msg)
 {
 	//ROS_INFO("I heard: [%s]", msg->data.c_str());
 	//msgTemp=(*msg);
@@ -46,7 +46,7 @@ void CommandCallback(const servo_controller::servo_polulu::ConstPtr& msg)
 
 int main(int argc,char**argv)
 {
-	ros::init(argc, argv, "polulu_servo");
+	ros::init(argc, argv, "pololu_servo");
 	ros::NodeHandle n;
 	ROS_INFO("Creating serial interface '%s' at %d bauds\n", portName.c_str(), baudRate);
 	serialInterface = Polstro::SerialInterface::createSerialInterface( portName, baudRate );
@@ -55,8 +55,8 @@ int main(int argc,char**argv)
 		ROS_ERROR("Failed to open interface\n");
 		return -1;
 	}
-	ros::Subscriber sub = n.subscribe("/cmd_polulu", 20, CommandCallback);
-	ros::ServiceServer service = n.advertiseService("polulu_status", status);
+	ros::Subscriber sub = n.subscribe("/cmd_pololu", 20, CommandCallback);
+	ros::ServiceServer service = n.advertiseService("pololu_status", status);
     ROS_INFO("Ready...");
 	//
 	ros::spin();

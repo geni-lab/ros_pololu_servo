@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(servo_controller)
+project(ros_pololu_servo)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -47,7 +47,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   servo_polulu.msg
+   servo_pololu.msg
 #   animate.msg
 #   Message2.msg
  )
@@ -55,7 +55,7 @@ add_message_files(
 ## Generate services in the 'srv' folder
 add_service_files(
    FILES
-   polulu_state.srv
+   pololu_state.srv
 #   Service2.srv
  )
 
@@ -83,7 +83,7 @@ add_service_files(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES servo_controller
+#  LIBRARIES ros_pololu_servo
   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
@@ -101,22 +101,22 @@ include_directories(
 )
 
 ## Declare a cpp library
-add_library(servo_controller
+add_library(ros_pololu_servo
    src/PolstroSerialInterface.cpp
    src/PolstroSerialInterfacePOSIX.cpp
  )
 
 ## Declare a cpp executable
-add_executable(servo_controller_node src/servo_controller_node.cpp)
+add_executable(ros_pololu_servo_node src/ros_pololu_servo_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(servo_controller_node servo_polulu.h polulu_state.h)
+add_dependencies(ros_pololu_servo_node servo_pololu.h pololu_state.h)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(servo_controller_node
+target_link_libraries(ros_pololu_servo_node
    ${catkin_LIBRARIES}
-   servo_controller
+   ros_pololu_servo
  )
 
 #############
@@ -134,7 +134,7 @@ target_link_libraries(servo_controller_node
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS servo_controller servo_controller_node
+# install(TARGETS ros_pololu_servo ros_pololu_servo_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -159,7 +159,7 @@ target_link_libraries(servo_controller_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_servo_controller.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_ros_pololu_servo.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

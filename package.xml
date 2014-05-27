@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>servo_controller</name>
+  <name>ros_pololu_servo</name>
   <version>0.0.0</version>
-  <description>The servo_controller package</description>
+  <description>The ros_pololu_servo package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/servo_controller</url> -->
+  <!-- <url type="website">http://wiki.ros.org/ros_pololu_servo</url> -->
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
