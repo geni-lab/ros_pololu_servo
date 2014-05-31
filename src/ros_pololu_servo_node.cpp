@@ -3,7 +3,7 @@
 #include <ros_pololu_servo/pololu_state.h>
 #include "PolstroSerialInterface.h"
 
-const unsigned int baudRate = 9600;
+const unsigned int baudRate = 38400;
 const float pi = 3.141592653589793f;
 const unsigned int channelMinValue = 4000;
 const unsigned int channelMaxValue = 8000;
