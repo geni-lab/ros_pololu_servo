@@ -42,7 +42,7 @@ void pub_motors()
 	for (std::size_t i=0; i<config.size(); i++) 
 	{
 		//std::cout << config[i]["id"].as<std::string>() << "\n";
-	unsigned char channelNumber=config[i]["id"].as<unsigned char>();
+	unsigned char channelNumber=atoi(config[i]["id"].as<std::string>().c_str());
 	unsigned short position;
 	serialInterface->getPositionCP( channelNumber, position );
 	float angle=(((float)(position-channelMinValue)/(float)channelValueRange)-0.5)*pi;
