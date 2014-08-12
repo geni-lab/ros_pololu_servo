@@ -48,6 +48,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
    FILES
    servo_pololu.msg
+   motor.msg
+   pololu_info.msg
 #   animate.msg
 #   Message2.msg
  )
@@ -117,6 +119,7 @@ add_dependencies(ros_pololu_servo_node servo_pololu.h pololu_state.h)
 target_link_libraries(ros_pololu_servo_node
    ${catkin_LIBRARIES}
    ros_pololu_servo
+   yaml-cpp
  )
 
 #############
@@ -149,9 +152,9 @@ target_link_libraries(ros_pololu_servo_node
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
-#   # myfile1
+#    src/pololu.yaml
 #   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+#    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
 #############
