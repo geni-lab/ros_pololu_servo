@@ -1,4 +1,0 @@
-int8 qid
----
-int8 id
-float64 angle

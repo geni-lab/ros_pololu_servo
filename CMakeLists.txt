@@ -47,19 +47,16 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   servo_pololu.msg
-   motor.msg
-   pololu_info.msg
-#   animate.msg
-#   Message2.msg
+   MotorCommand.msg
+   MotorState.msg
+   MotorStateList.msg
  )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-   FILES
-   pololu_state.srv
+#add_service_files(
+#   FILES
 #   Service2.srv
- )
+# )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
