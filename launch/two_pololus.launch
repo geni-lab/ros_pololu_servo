@@ -1,13 +1,13 @@
 
 <launch>
     <node pkg="ros_pololu_servo" type="ros_pololu_servo_node" name="ros_pololu_servo_node" output="screen">
-        <param name="pololu_config" value="$(find ros_pololu_servo)/launch/pololu.yaml" />
+        <param name="pololu_motors_yaml" value="$(find ros_pololu_servo)/launch/pololu_motors.yaml" />
         <param name="port_name" value="/dev/ttyACM0" />
         <param name="pololu_namespace" value="pololu_1" />
     </node>
 
     <node pkg="ros_pololu_servo" type="ros_pololu_servo_node" name="ros_pololu_servo_node" output="screen">
-        <param name="pololu_config" value="$(find ros_pololu_servo)/launch/pololu.yaml" />
+        <param name="pololu_motors_yaml" value="$(find ros_pololu_servo)/launch/pololu_motors.yaml" />
         <param name="port_name" value="/dev/ttyACM1" />
         <param name="pololu_namespace" value="pololu_2" />
     </node>

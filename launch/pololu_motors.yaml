@@ -1,0 +1,17 @@
+# Pololu based motors
+#
+neck_yaw_joint:
+  id: 5
+  min: -60.0
+  init: -11.0
+  max: 60.0
+  reverse: false
+
+neck_pitch_joint:
+  id: 6
+  min: -70.0
+  init: 18.0
+  max: 70.0
+  reverse: true
+
+
