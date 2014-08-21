@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  angles
 )
 
 ## System dependencies are found with CMake's conventions
@@ -47,6 +48,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
+   MotorCalibration.msg
    MotorCommand.msg
    MotorState.msg
    MotorStateList.msg
@@ -103,14 +105,17 @@ include_directories(
 add_library(ros_pololu_servo
    src/PolstroSerialInterface.cpp
    src/PolstroSerialInterfacePOSIX.cpp
+   src/PololuMath.cpp
+   src/PololuYamlParser.cpp
+   src/PololuController.cpp
  )
 
 ## Declare a cpp executable
-add_executable(ros_pololu_servo_node src/ros_pololu_servo_node.cpp)
+add_executable(ros_pololu_servo_node src/PololuControllerNode.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(ros_pololu_servo_node servo_pololu.h pololu_state.h)
+#add_dependencies(ros_pololu_servo_node)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(ros_pololu_servo_node

@@ -1,17 +1,30 @@
 # Pololu based motors
-#
+
 neck_yaw_joint:
-  id: 5
-  min: -60.0
-  init: -11.0
-  max: 60.0
+  pololu_id: 12
+  motor_id: 5
+  init: 0.0
+  min: -45.0
+  max: 45.0
   reverse: false
+  calibration:
+    min_pulse: 1000
+    min_angle: -45
+    max_pulse: 2000
+    max_angle: 45
 
 neck_pitch_joint:
-  id: 6
-  min: -70.0
-  init: 18.0
-  max: 70.0
+  pololu_id: 12
+  motor_id: 6
+  init: 0.0
+  min: -50.0
+  max: 50.0
   reverse: true
+  calibration:
+    min_pulse: 1000
+    min_angle: -50
+    max_pulse: 2000
+    max_angle: 50
+
 
 
