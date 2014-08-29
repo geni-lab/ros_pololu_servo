@@ -1,0 +1,5 @@
+string motor_name       # Name of motor
+---
+float32 min             # Min motor range
+float32 max             # Max motor range
+float32 direction       # Direction (whether reversed)

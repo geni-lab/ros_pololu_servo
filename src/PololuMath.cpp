@@ -45,5 +45,5 @@ double PololuMath::angle_to_pulse(double angle, Calibration calibration)
 
 double PololuMath::pulse_to_angle(int pulse, Calibration calibration)
 {
-    return interpolate((double)pulse, (double)calibration.min_pulse, (double)calibration.max_pulse, (double)calibration.min_angle, (double)calibration.max_angle) * 4.0;
+    return interpolate((double)pulse, (double)calibration.min_pulse * 4.0, (double)calibration.max_pulse * 4.0, (double)calibration.min_angle, (double)calibration.max_angle);
 }

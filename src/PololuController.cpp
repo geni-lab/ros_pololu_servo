@@ -2,6 +2,7 @@
 #include "PololuMath.h"
 #include <string>
 #include <ros/ros.h>
+#include <ros_pololu_servo/MotorRange.h>
 
 using namespace ros_pololu_servo;
 using namespace std;
@@ -57,7 +58,30 @@ bool PololuController::initialize()
 	motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
 	motor_cmd_sub = n.subscribe("pololu/command", 10, &PololuController::motor_command_callback, this);
 
+	// Setup services
+	motor_range_srv = n.advertiseService("pololu/motor_range", &PololuController::motor_range_callback, this);
+
 	return success;
+}
+
+bool PololuController::motor_range_callback(MotorRange::Request &req, MotorRange::Response &res)
+{
+    ROS_INFO("Recevied motor_range_callback for motor: %s", req.motor_name.c_str());
+    map<string, Motor>::iterator iterator = motors.find(req.motor_name);
+
+    if(iterator != motors.end())
+    {
+        Motor motor = motors[req.motor_name];
+        res.min = motor.min;
+        res.max = motor.max;
+        res.direction = motor.direction;
+        return true;
+    }
+    else
+    {
+        ROS_ERROR("motor %s hasn't been loaded into pololu_config", req.motor_name.c_str());
+        return false;
+    }
 }
 
 void PololuController::publish_motor_state()
@@ -84,7 +108,11 @@ void PololuController::publish_motor_state()
         motor_state.name = motor.name;
         motor_state.pololu_id = motor.pololu_id;
         motor_state.motor_id = motor.motor_id;
-        motor_state.radians = PololuMath::to_joint_pos(PololuMath::pulse_to_angle(pulse, motor.calibration), motor);
+        motor_state.pulse = pulse;
+
+
+        double angle = PololuMath::pulse_to_angle(pulse, motor.calibration);
+        motor_state.radians = PololuMath::to_joint_pos(angle, motor); //, motor); //PololuMath::to_joint_pos(;
         motor_state.degrees = to_degrees(motor_state.radians);
         motor_state_list.motor_states.push_back(motor_state);
     }
