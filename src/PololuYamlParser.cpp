@@ -22,33 +22,25 @@ bool PololuYamlParser::parse(string directory, map<string, Motor> &motors)
             motor.name = it->first.as<string>();
             motors[motor.name] = motor;
 
-            // Calculate direction
-            int min_sgn = sgn(motor.min);
-            int max_sgn = sgn(motor.max);
-
-            // Check min / max signs
-            if(min_sgn == max_sgn || max_sgn < 0 || 0 < min_sgn)
+            if(!(motor.min < motor.max))
             {
-                ROS_ERROR("motor %s, min (%f) and max (%f) cannot have the same sign, max cannot be less than 0 and min cannot be greater than 0", motor.name.c_str(), to_degrees(motor.min), to_degrees(motor.max));
+                ROS_ERROR("motor %s: min (%f) must be less than motor max (%f)", motor.name.c_str(), motor.min, motor.max);
                 success = false;
             }
 
-            //
-            double min_range = fabs(-M_PI/2 - motor.init);
-            double max_range = fabs(M_PI/2 - motor.init);
-
-            if(fabs(motor.min) > min_range)
+            if(!(motor.min < motor.init && motor.init <= motor.max))
             {
-                ROS_ERROR("motor %s, -ve range (%f) cannot be less than %f", motor.name.c_str(), to_degrees(motor.min), to_degrees(-min_range));
-                success = false;
-            }
-            else if(motor.max > max_range)
-            {
-                ROS_ERROR("motor %s, +ve range (%f) cannot be greater than %f", motor.name.c_str(), to_degrees(motor.max), to_degrees(max_range));
+                ROS_ERROR("motor %s: min (%f) must be less than init (%f) and init must be less than or equal to max (%f)", motor.name.c_str(), motor.min, motor.init, motor.max);
                 success = false;
             }
 
-            ROS_INFO("Added motor (id: %d/%d, name: %s, min: %f, init: %f, max: %f)", motor.pololu_id, motor.motor_id, motor.name.c_str(), to_degrees(motor.min), to_degrees(motor.init), to_degrees(motor.max));
+            if(!(motor.min <= motor.init && motor.init < motor.max))
+            {
+                ROS_ERROR("motor %s: min (%f) must be less than or equal to init (%f) and init must be less than max (%f)", motor.name.c_str(), motor.min, motor.init, motor.max);
+                success = false;
+            }
+
+            ROS_INFO("Added motor (id: %d/%d, name: %s, min: %f, init: %f, max: %f)", motor.pololu_id, motor.motor_id, motor.name.c_str(), motor.min, motor.init, motor.max);
         }
     }
     catch(YAML::ParserException& e)
@@ -151,9 +143,9 @@ namespace YAML
 
             motor.pololu_id = node["pololu_id"].as<int>();
             motor.motor_id = node["motor_id"].as<int>();
-            motor.min = from_degrees(node["min"].as<double>());
-            motor.init = from_degrees(node["init"].as<double>());
-            motor.max = from_degrees(node["max"].as<double>());
+            motor.min = node["min"].as<double>();
+            motor.init = node["init"].as<double>();
+            motor.max = node["max"].as<double>();
             motor.calibration = node["calibration"].as<Calibration>();
             motor.direction = 1.0;
 

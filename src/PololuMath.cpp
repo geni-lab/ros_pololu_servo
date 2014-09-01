@@ -6,14 +6,20 @@ struct Motor;
 double PololuMath::EPSILON = 0.001;
 
 
-double PololuMath::to_motor_pos(double value, Motor motor)
+double PololuMath::to_pulse(double radians, Motor motor)
 {
-    return (value + motor.init) * motor.direction;
+    double range_pwm = motor.calibration.max_pulse - motor.calibration.min_pulse;
+    double range_rads = motor.calibration.max_angle - motor.calibration.min_angle;
+    double scale = range_pwm / range_rads;
+    return (radians * motor.direction * scale) + motor.init;
 }
 
-double PololuMath::to_joint_pos(double value, Motor motor)
+double PololuMath::to_radians(double pulse, Motor motor)
 {
-    return (value + motor.init) * motor.direction;
+    double range_pwm = motor.calibration.max_pulse - motor.calibration.min_pulse;
+    double range_rads = motor.calibration.max_angle - motor.calibration.min_angle;
+    double scale = range_pwm / range_rads;
+    return (pulse - motor.init) / scale * motor.direction;
 }
 
 bool PololuMath::are_same(double a, double b)
@@ -36,14 +42,4 @@ double PololuMath::interpolate(double value, double old_min, double old_max, dou
     //printf("old_range: %f, new_range: %f, scaled_val: %f, new_val: %f", old_range, new_range, scaled_value, new_val);
 
     return new_val;
-}
-
-double PololuMath::angle_to_pulse(double angle, Calibration calibration)
-{
-    return interpolate(angle, (double)calibration.min_angle, (double)calibration.max_angle, (double)calibration.min_pulse, (double)calibration.max_pulse) * 4.0;
-}
-
-double PololuMath::pulse_to_angle(int pulse, Calibration calibration)
-{
-    return interpolate((double)pulse, (double)calibration.min_pulse * 4.0, (double)calibration.max_pulse * 4.0, (double)calibration.min_angle, (double)calibration.max_angle);
 }
