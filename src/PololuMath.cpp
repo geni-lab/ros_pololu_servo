@@ -6,6 +6,22 @@ struct Motor;
 double PololuMath::EPSILON = 0.001;
 
 
+double PololuMath::clamp(double value, double min, double max)
+{
+    if(value < min)
+    {
+        return min;
+    }
+    else if(value > max)
+    {
+        return max;
+    }
+    else
+    {
+        return value;
+    }
+}
+
 double PololuMath::to_pulse(double radians, Motor motor)
 {
     double range_pwm = motor.calibration.max_pulse - motor.calibration.min_pulse;

@@ -13,4 +13,5 @@ class PololuMath
         static double interpolate(double value, double old_min, double old_max, double new_min, double new_max);
         static double to_pulse(double radians, Motor motor);
         static double to_radians(double pulse, Motor motor);
+        static double clamp(double value, double min, double max);
 };

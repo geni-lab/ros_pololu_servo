@@ -165,7 +165,7 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
             double speed = PololuMath::interpolate(msg->speed, 0.0, 1.0, 1.0, 255.0); //Set speed, make sure doesn't below 1, which is max speed
             double acceleration = PololuMath::interpolate(msg->acceleration, 0.0, 1.0, 1.0, 255.0); //Set acceleration, make sure doesn't go below 1, which is max acceleration
 
-            double pulse_m = pulse * 4.0;
+            double pulse_m = PololuMath::clamp(pulse * 4.0, 4000, 8000); //TODO: clamp between 4000 - 8000, slight errors mean can get out of range
             ROS_INFO("id: %d/%d, pulse:  %f, pos: %f, speed: %f, accel: %f", motor.pololu_id, motor.motor_id, pulse_m, msg->position, speed, acceleration);
 
             serial_interface->setSpeedCP(motor.motor_id, speed);
