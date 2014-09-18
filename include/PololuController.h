@@ -29,6 +29,7 @@ class PololuController
         Polstro::SerialInterface* serial_interface;
         std::string pololu_config_dir, port_name;
         int baud_rate, rate_hz;
+        bool daisy_chain;
 
         ros_pololu_servo::MotorStateList motor_state_list;
         map<string, Motor> motors;
