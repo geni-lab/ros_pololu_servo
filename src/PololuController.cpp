@@ -45,6 +45,7 @@ bool PololuController::initialize()
     nh.param<string>("port_name", port_name, "/dev/ttyACM0");
     nh.param<int>("baud_rate", baud_rate, 115200);
     nh.param<int>("rate_hz", rate_hz, 10);
+    nh.param<bool>("daisy_chain", daisy_chain, false);
 
     // Create serial interface
 
@@ -95,7 +96,15 @@ void PololuController::publish_motor_state()
 	    motor = (iterator->second);
 
         unsigned short pulse;
-        serial_interface->getPositionCP(motor.motor_id, pulse);
+        if(daisy_chain)
+        {
+            serial_interface->getPositionPP(motor.pololu_id, motor.motor_id, pulse);
+        }
+        else
+        {
+            serial_interface->getPositionCP(motor.motor_id, pulse);
+        }
+
         pulse = pulse * 0.25;
 
         MotorState motor_state;
@@ -164,13 +173,22 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
             double pulse = PololuMath::to_pulse(msg->position, motor);
             double speed = PololuMath::interpolate(msg->speed, 0.0, 1.0, 1.0, 255.0); //Set speed, make sure doesn't below 1, which is max speed
             double acceleration = PololuMath::interpolate(msg->acceleration, 0.0, 1.0, 1.0, 255.0); //Set acceleration, make sure doesn't go below 1, which is max acceleration
+            double pulse_m = PololuMath::clamp(pulse * 4.0, 4000, 8000);
 
-            double pulse_m = PololuMath::clamp(pulse * 4.0, 4000, 8000); //TODO: clamp between 4000 - 8000, slight errors mean can get out of range
-            ROS_INFO("id: %d/%d, pulse:  %f, pos: %f, speed: %f, accel: %f", motor.pololu_id, motor.motor_id, pulse_m, msg->position, speed, acceleration);
-
-            serial_interface->setSpeedCP(motor.motor_id, speed);
-            serial_interface->setAccelerationCP(motor.motor_id, acceleration);
-            serial_interface->setTargetCP(motor.motor_id, (int)pulse_m);
+            if(daisy_chain)
+            {
+                serial_interface->setSpeedPP(motor.pololu_id, motor.motor_id, speed);
+                serial_interface->setAccelerationPP(motor.pololu_id, motor.motor_id, acceleration);
+                serial_interface->setTargetPP(motor.pololu_id, motor.motor_id, (int)pulse_m);
+                ROS_INFO("id: %d/%d, pulse:  %f, pos: %f, speed: %f, accel: %f", motor.pololu_id, motor.motor_id, pulse_m, msg->position, speed, acceleration);
+            }
+            else
+            {
+                serial_interface->setSpeedCP(motor.motor_id, speed);
+                serial_interface->setAccelerationCP(motor.motor_id, acceleration);
+                serial_interface->setTargetCP(motor.motor_id, (int)pulse_m);
+                ROS_INFO("id: %d, pulse:  %f, pos: %f, speed: %f, accel: %f", motor.motor_id, pulse_m, msg->position, speed, acceleration);
+            }
         }
     }
     else

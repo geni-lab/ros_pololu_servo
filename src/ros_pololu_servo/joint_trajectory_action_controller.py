@@ -3,7 +3,6 @@
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2010-2011, Antons Rebguns.
-# Copyright (c) 2014, Jamie Diprose
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
