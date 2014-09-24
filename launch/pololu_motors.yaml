@@ -26,5 +26,15 @@ neck_pitch_joint:
     max_pulse: 2000
     max_angle: 50
 
-
-
+listen_led:
+  pololu_id: 12
+  motor_id: 7
+  init: 1900
+  min: 1000
+  max: 2000
+  reverse: true
+  calibration:
+    min_pulse: 1000
+    min_angle: -45
+    max_pulse: 2000
+    max_angle: 45
