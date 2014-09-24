@@ -23,7 +23,7 @@ class trajectory:
         rospy.init_node('pololu_trajectory_listener', anonymous=True)
 
         self.MaxSpeed=6.2 #radians/sec
-        self.TimeOut=15.0 #seconds
+        self.TimeOut=120.0 #seconds
 
         self.rcvTraj=JointTrajectory()
         self.rcvd=False

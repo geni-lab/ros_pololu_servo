@@ -11,11 +11,13 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   angles
   trajectory_msgs
+  actionlib
+  actionlib_msgs
+  genmsg
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -48,6 +50,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
 add_message_files(
+   DIRECTORY
+   msg
    FILES
    MotorCalibration.msg
    MotorCommand.msg
@@ -62,16 +66,20 @@ add_service_files(
  )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
+add_action_files(
+   DIRECTORY
+   action
+   FILES
+   pololu_trajectory.action
 #   Action2.action
-# )
+ )
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
    std_msgs
+   actionlib_msgs
+   trajectory_msgs
  )
 
 ###################################
@@ -84,9 +92,9 @@ add_service_files(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+#  INCLUDE_DIRS include
 #  LIBRARIES ros_pololu_servo
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime actionlib_msgs
 #  DEPENDS system_lib
 )
 
