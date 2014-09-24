@@ -24,7 +24,7 @@ motor_two:
     min_pulse: 1000
     min_angle: -45
     max_pulse: 2000
-    max_angle: -45
+    max_angle: 45
 
 
 
