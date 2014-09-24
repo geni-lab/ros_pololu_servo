@@ -101,7 +101,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   include
 )
-
+link_directories( /usr/local/lib )
 ## Declare a cpp library
 add_library(ros_pololu_servo
    src/PolstroSerialInterface.cpp
@@ -117,6 +117,10 @@ add_executable(ros_pololu_servo_node src/pololu_controller_node.cpp)
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 #add_dependencies(ros_pololu_servo_node)
+target_link_libraries(ros_pololu_servo
+   ${catkin_LIBRARIES}
+   yaml-cpp
+ )
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(ros_pololu_servo_node
@@ -169,6 +173,7 @@ target_link_libraries(ros_pololu_servo_node
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
+
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
