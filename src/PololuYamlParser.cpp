@@ -28,16 +28,16 @@ bool PololuYamlParser::parse(string directory, map<string, Motor> &motors)
                 success = false;
             }
 
-            if(!(motor.min < motor.init && motor.init <= motor.max))
+            if(motor.min >= motor.init)
             {
-                ROS_ERROR("motor %s: min (%f) must be less than init (%f) and init must be less than or equal to max (%f)", motor.name.c_str(), motor.min, motor.init, motor.max);
-                success = false;
+                ROS_ERROR("motor %s: min (%f) must be less than init (%f). Attempting to fail gracefully by clamping.", motor.name.c_str(), motor.min, motor.init);
+                motor.init = motor.min + 1.0;
             }
 
-            if(!(motor.min <= motor.init && motor.init < motor.max))
+            if(motor.init <= motor.max)
             {
-                ROS_ERROR("motor %s: min (%f) must be less than or equal to init (%f) and init must be less than max (%f)", motor.name.c_str(), motor.min, motor.init, motor.max);
-                success = false;
+                ROS_ERROR("motor %s: init (%f) must be less than max (%f). Attempting to fail gracefully by clamping. ", motor.name.c_str(), motor.init, motor.max);
+                motor init = motor.max - 1.0;
             }
 
             ROS_INFO("Added motor (id: %d/%d, name: %s, min: %f, init: %f, max: %f)", motor.pololu_id, motor.motor_id, motor.name.c_str(), motor.min, motor.init, motor.max);

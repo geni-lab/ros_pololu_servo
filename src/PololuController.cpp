@@ -48,8 +48,8 @@ bool PololuController::initialize()
     nh.param<bool>("daisy_chain", daisy_chain, false);
 
     // Create serial interface
-
 	serial_interface = Polstro::SerialInterface::createSerialInterface(port_name, baud_rate);
+
 	if (!serial_interface->isOpen())
 	{
 		ROS_ERROR("Failed to open interface, exiting");
@@ -88,14 +88,20 @@ bool PololuController::motor_range_callback(MotorRange::Request &req, MotorRange
 
 void PololuController::publish_motor_state()
 {
+
+    //refresh the motor states
 	motor_state_list.motor_states.clear();
 
+    //iterate through all of the motors
 	for(map<string, Motor>::iterator iterator = motors.begin(); iterator != motors.end(); iterator++)
 	{
+	    unsigned short pulse;
+	    MotorState motor_state;
+
 	    Motor motor;
 	    motor = (iterator->second);
 
-        unsigned short pulse;
+        //nab the pulse from the interface based on the motor_id we're requesting about.
         if(daisy_chain)
         {
             serial_interface->getPositionPP(motor.pololu_id, motor.motor_id, pulse);
@@ -105,14 +111,17 @@ void PololuController::publish_motor_state()
             serial_interface->getPositionCP(motor.motor_id, pulse);
         }
 
+       //he's dividing by four to convert Maestro's PWM pulse to what we're working with.
         pulse = pulse * 0.25;
 
-        MotorState motor_state;
+
         motor_state.name = motor.name;
         motor_state.pololu_id = motor.pololu_id;
         motor_state.motor_id = motor.motor_id;
+
+        //yay, conversion operations
         motor_state.radians = PololuMath::to_radians(pulse, motor) * motor.direction;
-        motor_state.degrees = to_degrees(motor_state.radians) * motor.direction;
+        motor_state.degrees = to_degrees(motor_state.radians); // (this looks like an error): * motor.direction;
         motor_state.pulse = pulse;
 
         motor_state.calibration.min_pulse = motor.calibration.min_pulse;
@@ -162,10 +171,16 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
         double new_min = std::min(min, max);
         double new_max = std::max(min, max);
 
-        if(!((new_min - 0.001) <= msg->position && msg->position <= (new_max + 0.001)))
+
+        if((new_min - 0.001) > msg->position)
         {
-            send_commands = false;
-            ROS_ERROR("trying to set motor %s position is %f degrees (should be between %f and %f degrees)", msg->joint_name.c_str(), msg->position, new_min, new_max);
+            ROS_ERROR("trying to set motor %s position is %f degrees (should be between %f and %f degrees. Attempting to fail gracefully by clamping.)", msg->joint_name.c_str(), msg->position, new_min, new_max);
+            msg->position = new_min + 0.001;
+        }
+        if((new_max + 0.001) < msg->position)
+        {
+            ROS_ERROR("trying to set motor %s position is %f degrees (should be between %f and %f degrees. Attempting to fail gracefully by clamping.)", msg->joint_name.c_str(), msg->position, new_min, new_max);
+            msg->position = new_max - 0.001;
         }
 
         if(send_commands)
