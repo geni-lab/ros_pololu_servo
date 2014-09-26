@@ -34,7 +34,7 @@ bool PololuYamlParser::parse(string directory, map<string, Motor> &motors)
                 motor.init = motor.min + 1.0;
             }
 
-            if(motor.init <= motor.max)
+            if(motor.init >= motor.max)
             {
                 ROS_ERROR("motor %s: init (%f) must be less than max (%f). Attempting to fail gracefully by clamping. ", motor.name.c_str(), motor.init, motor.max);
                 motor.init = motor.max - 1.0;
