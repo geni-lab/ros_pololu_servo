@@ -170,22 +170,23 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
         double max = PololuMath::to_radians(motor.max, motor);
         double new_min = std::min(min, max);
         double new_max = std::max(min, max);
+        double new_position = msg->position;
 
 
-        if((new_min - 0.001) > msg->position)
+        if((new_min - 0.001) > new_position)
         {
             ROS_ERROR("trying to set motor %s position is %f degrees (should be between %f and %f degrees. Attempting to fail gracefully by clamping.)", msg->joint_name.c_str(), msg->position, new_min, new_max);
-            msg->position = new_min + 0.001;
+            new_position = new_min + 0.001;
         }
-        if((new_max + 0.001) < msg->position)
+        if((new_max + 0.001) < new_position)
         {
             ROS_ERROR("trying to set motor %s position is %f degrees (should be between %f and %f degrees. Attempting to fail gracefully by clamping.)", msg->joint_name.c_str(), msg->position, new_min, new_max);
-            msg->position = new_max - 0.001;
+            new_position = new_max - 0.001;
         }
 
         if(send_commands)
         {
-            double pulse = PololuMath::to_pulse(msg->position, motor);
+            double pulse = PololuMath::to_pulse(new_position, motor);
             double speed = PololuMath::interpolate(msg->speed, 0.0, 1.0, 1.0, 255.0); //Set speed, make sure doesn't below 1, which is max speed
             double acceleration = PololuMath::interpolate(msg->acceleration, 0.0, 1.0, 1.0, 255.0); //Set acceleration, make sure doesn't go below 1, which is max acceleration
             double pulse_m = PololuMath::clamp(pulse * 4.0, 4000, 8000);
