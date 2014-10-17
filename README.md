@@ -16,3 +16,4 @@ Note:
 *run ros_pololu_servo_node
 
 *scripts contain  pololu_trajectory_action_node.py action server to allow trajectory message based control of pololu motors
+pololu_action_client_example.py is an example of how to use pololu_trajectory_action_node.py
