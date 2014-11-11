@@ -5,12 +5,12 @@
 namespace Polstro
 {
 
-/* 
+/*
 	The SerialInterface is the object used to communicate with one or more Maestro devices.
 	At creation time, the interface opens the specified port at the given baud rate.
 	If succesfull, it is possible after that to issue commands to the device(s) on that port.
 	Devices can be chained one to the other. The chain is connected to a single port.
-	
+
 	For detailled explanations about the commands, see the Pololu documentation
 		http://www.pololu.com/docs/0J40/5.e
 */
@@ -25,11 +25,11 @@ public:
 	static unsigned int getMinChannelValue()  { return mMinChannelValue; }
 	static unsigned int getMaxChannelValue()  { return mMaxChannelValue; }
 
-	// The target is given in units of 0.25탎 
+	// The target is given in units of 0.25탎
 	bool setTargetCP( unsigned char channelNumber, unsigned short target );
 	bool setTargetPP( unsigned char deviceNumber, unsigned char channelNumber, unsigned short target );
-	
-	// The normalizedTarget is between 0 and 255 and the actual value it represents in 탎 depends 
+
+	// The normalizedTarget is between 0 and 255 and the actual value it represents in 탎 depends
 	// on the neutral and range configured for the channel of the device (and stored on the device).
 	// This allow calibration to be done externally once (using the Maestro Control Center for example)
 	// and have the application manipulate values that are "good".
@@ -37,13 +37,13 @@ public:
 	bool setTargetMSSCP( unsigned char miniSCCChannelNumber, unsigned char normalizedTarget );
 
 	// On Mini Maestro 12, 18 and 24 only, so not supported here
-	// bool setMultipleTargets(...) 
+	// bool setMultipleTargets(...)
 
 	// The speed limit is given in units of (0.25탎)/(10ms)
 	bool setSpeedCP( unsigned char channelNumber, unsigned short speed );
 	bool setSpeedPP( unsigned char deviceNumber, unsigned char channelNumber, unsigned short speed );
 
-	// The acceleration limit is a value from 0 to 255 in units of (0.25탎)/(10ms)/(80ms)	
+	// The acceleration limit is a value from 0 to 255 in units of (0.25탎)/(10ms)/(80ms)
 	bool setAccelerationCP( unsigned char channelNumber, unsigned char acceleration );
 	bool setAccelerationPP( unsigned char deviceNumber, unsigned char channelNumber, unsigned char acceleration );
 
@@ -68,11 +68,11 @@ public:
 	bool goHomePP( unsigned char deviceNumber );
 
 	static SerialInterface* createSerialInterface( const std::string& portName, unsigned int baudRate );
-	
+
 private:
-	static const unsigned int mMinChannelValue = 4000;
-	static const unsigned int mMaxChannelValue = 8000;
-	
+	static const unsigned int mMinChannelValue = 3240;
+	static const unsigned int mMaxChannelValue = 8700;
+
 	virtual bool writeBytes( const unsigned char* data, unsigned int dataSizeInBytes ) = 0;
 	virtual bool readBytes( unsigned char* data, unsigned int dataSizeInBytes ) = 0;
 };
