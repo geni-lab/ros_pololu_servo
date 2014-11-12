@@ -18,8 +18,8 @@ PololuController::PololuController()
 PololuController::~PololuController()
 {
     ROS_INFO("Shutting down...");
-	delete serial_interface;
-	serial_interface = NULL;
+    delete serial_interface;
+    serial_interface = NULL;
 }
 
 bool PololuController::initialize()
@@ -29,9 +29,9 @@ bool PololuController::initialize()
     bool success = true;
 
     // Load parameters
-	ROS_INFO("Loading pololu_motors_yaml...");
+    ROS_INFO("Loading pololu_motors_yaml...");
 
-	if (nh.hasParam("pololu_motors_yaml"))
+    if (nh.hasParam("pololu_motors_yaml"))
     {
         nh.getParam("pololu_motors_yaml", pololu_config_dir);
         success = PololuYamlParser::parse(pololu_config_dir, motors);
@@ -48,22 +48,22 @@ bool PololuController::initialize()
     nh.param<bool>("daisy_chain", daisy_chain, false);
 
     // Create serial interface
-	serial_interface = Polstro::SerialInterface::createSerialInterface(port_name, baud_rate);
+    serial_interface = Polstro::SerialInterface::createSerialInterface(port_name, baud_rate);
 
-	if (!serial_interface->isOpen())
-	{
-		ROS_ERROR("Failed to open interface, exiting");
-		success = false;
-	}
+    if (!serial_interface->isOpen())
+    {
+        ROS_ERROR("Failed to open interface, exiting");
+        success = false;
+    }
 
     // Setup publisher and subscriber
-	motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
-	motor_cmd_sub = n.subscribe("pololu/command", 10, &PololuController::motor_command_callback, this);
+    motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
+    motor_cmd_sub = n.subscribe("pololu/command", 10, &PololuController::motor_command_callback, this);
 
-	// Setup services
-	motor_range_srv = n.advertiseService("pololu/motor_range", &PololuController::motor_range_callback, this);
+    // Setup services
+    motor_range_srv = n.advertiseService("pololu/motor_range", &PololuController::motor_range_callback, this);
 
-	return success;
+    return success;
 }
 
 bool PololuController::motor_range_callback(MotorRange::Request &req, MotorRange::Response &res)
@@ -90,16 +90,16 @@ void PololuController::publish_motor_state()
 {
 
     //refresh the motor states
-	motor_state_list.motor_states.clear();
+    motor_state_list.motor_states.clear();
 
     //iterate through all of the motors
-	for(map<string, Motor>::iterator iterator = motors.begin(); iterator != motors.end(); iterator++)
-	{
-	    unsigned short pulse;
-	    MotorState motor_state;
+    for(map<string, Motor>::iterator iterator = motors.begin(); iterator != motors.end(); iterator++)
+    {
+        unsigned short pulse;
+        MotorState motor_state;
 
-	    Motor motor;
-	    motor = (iterator->second);
+        Motor motor;
+        motor = (iterator->second);
 
         //nab the pulse from the interface based on the motor_id we're requesting about.
         if(daisy_chain)
@@ -135,7 +135,7 @@ void PololuController::publish_motor_state()
         motor_state_list.motor_states.push_back(motor_state);
     }
 
-	motor_state_list_pub.publish(motor_state_list);
+    motor_state_list_pub.publish(motor_state_list);
 }
 
 double PololuController::get_rate_hz()
