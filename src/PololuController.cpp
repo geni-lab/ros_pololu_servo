@@ -41,12 +41,12 @@ bool PololuController::initialize()
         ROS_ERROR("pololu_config file not specified, exiting");
         success = false;
     }
-
     nh.param<string>("port_name", port_name, "/dev/ttyACM0");
     nh.param<int>("baud_rate", baud_rate, 115200);
     nh.param<int>("rate_hz", rate_hz, 10);
     nh.param<bool>("daisy_chain", daisy_chain, false);
-
+    nh.param<string>("topic_prefix", topic_prefix, "pololu/");
+    nh.param<string>("topic_name", topic_name, "command");
     // Create serial interface
     serial_interface = Polstro::SerialInterface::createSerialInterface(port_name, baud_rate);
 
@@ -57,11 +57,11 @@ bool PololuController::initialize()
     }
 
     // Setup publisher and subscriber
-    motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
-    motor_cmd_sub = n.subscribe("pololu/command", 10, &PololuController::motor_command_callback, this);
+    motor_state_list_pub = n.advertise<MotorStateList>(topic_prefix+"motor_states", 10);
+    motor_cmd_sub = n.subscribe(topic_prefix+topic_name, 10, &PololuController::motor_command_callback, this);
 
     // Setup services
-    motor_range_srv = n.advertiseService("pololu/motor_range", &PololuController::motor_range_callback, this);
+    motor_range_srv = n.advertiseService(topic_prefix+"motor_range", &PololuController::motor_range_callback, this);
 
     return success;
 }
