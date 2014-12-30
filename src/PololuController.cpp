@@ -57,7 +57,7 @@ bool PololuController::initialize()
     }
 
     // Setup publisher and subscriber
-    motor_state_list_pub = n.advertise<MotorStateList>(topic_prefix+"motor_states", 10);
+    motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
     motor_cmd_sub = n.subscribe(topic_prefix+topic_name, 10, &PololuController::motor_command_callback, this);
 
     // Setup services
