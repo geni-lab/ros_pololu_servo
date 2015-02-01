@@ -6,6 +6,11 @@ Based on polstro (https://code.google.com/p/polstro/).
 
 Notes:
 
+* Depends on ROS package [angles](http://wiki.ros.org/angles), to install:
+  ```
+    user@computer:~$ sudo apt-get install ros-indigo-angles
+  ```
+
 * In the case of a single board, be sure to put pololu maestro into dual
   port mode from inside the Pololu provided control software.  This has
   to be done initially, only once, on a new Pololu Maestro board.
@@ -16,7 +21,7 @@ Notes:
 
 * You need to be a part of dialout group. You can set this with
   ```
-        $ sudo adduser $USER dialout
+    user@computer:~$ sudo adduser $USER dialout
   ```
   and then logout and log back in.  Alternately, it should be enough
   close all terminal windows, and reopen them.
