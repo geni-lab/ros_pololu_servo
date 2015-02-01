@@ -111,13 +111,18 @@ include_directories(
 )
 link_directories( /usr/local/lib )
 ## Declare a cpp library
-add_library(ros_pololu_servo
-   src/PolstroSerialInterface.cpp
-   src/PolstroSerialInterfacePOSIX.cpp
-   src/PololuMath.cpp
-   src/PololuYamlParser.cpp
-   src/PololuController.cpp
+
+add_library(polstro
+   src/polstro/PolstroSerialInterface.cpp
+   src/polstro/PolstroSerialInterfacePOSIX.cpp
  )
+
+add_library(ros_pololu_servo
+   src/ros_pololu_servo/PololuMath.cpp
+   src/ros_pololu_servo/PololuYamlParser.cpp
+   src/ros_pololu_servo/PololuController.cpp
+ )
+
 
 ## Declare a cpp executable
 add_executable(ros_pololu_servo_node src/pololu_controller_node.cpp)
@@ -134,6 +139,7 @@ target_link_libraries(ros_pololu_servo
 target_link_libraries(ros_pololu_servo_node
    ${catkin_LIBRARIES}
    ros_pololu_servo
+   polstro
    yaml-cpp
  )
 
