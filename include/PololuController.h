@@ -33,6 +33,7 @@ class PololuController
 
         ros_pololu_servo::MotorStateList motor_state_list;
         map<string, Motor> motors;
+        Motor default_motor();
 
     public:
         PololuController();
