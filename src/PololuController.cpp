@@ -214,7 +214,7 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
 
             double speed = PololuMath::interpolate(msg->speed, 0.0, 1.0, 0, 255.0); //Set speed, make sure doesn't below 0, which is max speed
             double acceleration = PololuMath::interpolate(msg->acceleration, 0.0, 1.0, 0, 255.0); //Set acceleration, make sure doesn't go below 0, which is max acceleration
-            double pulse_m = PololuMath::clamp(pulse * 4.0, 3680, 8700);
+            double pulse_m = PololuMath::clamp(pulse * 4.0, 3280, 8700);
 
             if(daisy_chain)
             {
