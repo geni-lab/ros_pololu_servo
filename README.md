@@ -36,3 +36,13 @@ Notes:
   An example of how to use this can be found in the 
   pololu_action_client_example.py file.
 
+
+HOWTO
+-----
+Here are examples of:
+
+ * [how to program it](https://github.com/geni-lab/hri_common/blob/master/scripts/mini_head_lip_sync_node.py)
+
+ * [how to launch it](https://github.com/geni-lab/zoidstein_robot/blob/master/zoidstein_driver/launch/zoidstein_driver.launch)
+
+ * [how to write a config file](https://github.com/geni-lab/zoidstein_robot/blob/master/zoidstein_driver/launch/zoidstein_pololu_motors.yaml)
