@@ -144,7 +144,7 @@ target_link_libraries(ros_pololu_servo_node
    yaml-cpp
  )
 
-add_executable(talker2 src/ros_pololu_servo/pololu_talker_2.cpp)
+add_executable(talker2 src/pololu_talker_2.cpp)
 target_link_libraries(talker2 ${catkin_LIBRARIES})
 add_dependencies(talker2 ${catkin_EXPORTED_TARGETS})
 #############

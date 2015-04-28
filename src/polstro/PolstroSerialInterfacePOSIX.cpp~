@@ -94,12 +94,12 @@ bool SerialInterfacePOSIX::writeBytes( const unsigned char* data, unsigned int n
 	ssize_t ret = write( mFileDescriptor, data, numBytesToWrite );
 	if ( ret==-1 )
 	{
-		printf("Error writing. errno=%d\n", (int)errno );
+		printf("Error writing. errno=%d\n", errno );
 		return false;
 	}
 	else if ( ret!=numBytesToWrite )
 	{
-		printf("Error writing. Wrote %d bytes instead of %d\n", (int)ret, (int)numBytesToWrite );
+		printf("Error writing. Wrote %d bytes instead of %d\n", ret, numBytesToWrite );
 		return false;
 	}
 
@@ -115,12 +115,12 @@ bool SerialInterfacePOSIX::readBytes( unsigned char* data, unsigned int numBytes
 	ssize_t ret = read( mFileDescriptor, data, numBytesToRead );
 	if ( ret==-1 )
 	{
-		printf("Error reading. errno=%d\n", (int)errno );
+		printf("Error reading. errno=%d\n", errno );
 		return false;
 	}
 	else if ( ret!=numBytesToRead )
 	{
-		printf("Error reading. Read %d bytes instead of %d\n", (int)ret, (int)numBytesToRead );
+		printf("Error reading. Read %d bytes instead of %d\n", ret, numBytesToRead );
 		return false;
 	}
 	return true;

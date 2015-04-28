@@ -148,8 +148,8 @@ leme_three:
     max_angle: 45
 
 leme_four:
-  pololu_id: 12
-  motor_id: 15
+  pololu_id: 15
+  motor_id: 11
   init: 1500
   min: 1000
   max: 2000
