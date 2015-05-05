@@ -75,7 +75,7 @@ int main(int argc, char **argv)
         if(mode==1)
             do
             {
-                ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable (with five motors)");
+                ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable with five motors (not recommended))");
             }
             while (((scanf("%d%c", &mode, &c)!=2 || c!='\n') && clean_stdin()));
         if(mode!=0 && mode != 2 && mode !=1)
