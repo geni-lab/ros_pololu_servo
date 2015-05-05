@@ -72,150 +72,124 @@ int main(int argc, char **argv)
   ros_pololu_servo::MotorCommand mtr;     //objeto da mensagem que será publicada
   while (ros::ok())
   {
+if(mode==1)
+do
+{
+ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable (with five motors)");
+} while (((scanf("%d%c", &mode, &c)!=2 || c!='\n') && clean_stdin()));
+if(mode!=0 && mode != 2 && mode !=1){
+ROS_INFO("Mode selected is invalid, setting to manual mode");
+mode =1;
+}
+if(mode==1)
+do
+{
+ROS_INFO("Enter position. ");
+} while (((scanf("%d%c", &position, &c)!=2 || c!='\n') && clean_stdin()));
+if(mode==1||(mode==0&&flag_inic==0))
+do
+{
+ROS_INFO("Which motor?");
+if(mode==0) flag_inic=1;
+} while (((scanf("%d%c", &mot_pos, &c)!=2 || c!='\n') && clean_stdin()));
+if(mode==0){
+if(!flag_posit)
+position+=taxa;
+else
+position-=taxa;
+if(position>=45){
+for(;position<1000000;position++); //for dummie para ficar um tempo parado na posição máxima
+flag_posit=1;
+position =45;
+}
+else if(position<=-45){
+for(;position<1000000;position++); //for dummie para ficar um tempo parado na posição máxima
+flag_posit=0;
+position =-45;
+}
+}
+if(mode==2){
+/**aqui serão utilizados os motores 0 (propulsão) 6 e 8 (vetorização) 12 e 14 (lemes)*/
+if(!flag_posit)
+position_aux+=taxa;
+else
+position_aux-=taxa;
+if(position_aux>=100){
+flag_posit=1;
+position_aux =100;
+}
+else if(position_aux<=-100){
+flag_posit=0;
+position_aux =-100;
+}
+if(mot_pos==0){
+mot_pos=6;
+position=(int)position_aux*0.45;
+}
+else if(mot_pos==6){
+mot_pos=8;
+position=(int)position_aux*0.3;
+}
+else if(mot_pos==8){
+mot_pos=12;
+position=(int)position_aux*(-0.3);
+}
+else if(mot_pos==12){
+mot_pos=14;
+position=(int)position_aux*0.45;
+}
+else if(mot_pos==14){
+mot_pos=0;
+position=(int)position_aux*(-0.45);
+}
+//ROS_INFO("\rmotor escolhido: %d",mot_pos);
+}
+if (mot_pos == 0)
+mtr.joint_name = "prop_one";
+else if (mot_pos == 1)
+mtr.joint_name = "prop_two";
+else if (mot_pos == 2)
+mtr.joint_name = "prop_three";
+else if (mot_pos == 3)
+mtr.joint_name = "prop_four";
+else if (mot_pos == 6)
+mtr.joint_name = "vet_one";
+else if (mot_pos == 7)
+mtr.joint_name = "vet_two";
+else if (mot_pos == 8)
+mtr.joint_name = "vet_three";
+else if (mot_pos == 9)
+mtr.joint_name = "vet_four";
+else if (mot_pos == 12)
+mtr.joint_name = "leme_one";
+else if (mot_pos == 13)
+mtr.joint_name = "leme_two";
+else if (mot_pos == 14)
+mtr.joint_name = "leme_three";
+else if (mot_pos == 15)
+mtr.joint_name = "leme_four";
+else if (mot_pos == 22)
+mtr.joint_name = "digital_one";
+else if (mot_pos == 23)
+mtr.joint_name = "digital_two";
+else{
+mtr.joint_name = "prop_one";
+ROS_INFO("invalid number, setting motor to prop_one");
+}
+mtr.position = int(position)*M_PI/180;
+mtr.speed = 1.0;
+mtr.acceleration=1.0;
+/**
+* The publish() function is how you send messages. The parameter
+* is the message object. The type of this object must agree with the type
+* given as a template parameter to the advertise<>() call, as was done
+* in the constructor above.
+*/
+pub.publish(mtr);
+ros::spinOnce();
+loop_rate.sleep();
+}
 
-    if(mode==1)                 
-      do
-      {  
-          ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable (with five motors)");
-
-      } while (((scanf("%d%c", &mode, &c)!=2 || c!='\n') && clean_stdin()));
-
-
-      if(mode!=0 && mode != 2 && mode !=1){
-          ROS_INFO("Mode selected is invalid, setting to manual mode");
-          mode =1;
-      }
-    
-    if(mode==1)
-      do
-      {  
-          ROS_INFO("Enter position. ");
-
-      } while (((scanf("%d%c", &position, &c)!=2 || c!='\n') && clean_stdin()));
-    
-
-    if(mode==1||(mode==0&&flag_inic==0))
-    do
-    {  
-        ROS_INFO("Witch motor?");
-        if(mode==0) flag_inic=1;
-
-    } while (((scanf("%d%c", &mot_pos, &c)!=2 || c!='\n') && clean_stdin()));
-    
-    if(mode==0){
-
-      if(!flag_posit)
-        position+=taxa;
-      else
-        position-=taxa;
-
-      if(position>=45){
-        for(;position<1000000;position++); //for dummie para ficar um tempo parado na posição máxima
-          flag_posit=1;
-        position =45;
-      }
-      else if(position<=-45){
-        for(;position<1000000;position++); //for dummie para ficar um tempo parado na posição máxima
-        flag_posit=0;
-        position =-45;
-      }
-    }
-
-    if(mode==2){
-      /**aqui serão utilizados os motores 0 (propulsão) 6 e 8 (vetorização) 12 e 14 (lemes)*/
-
-      if(!flag_posit)
-        position_aux+=taxa;
-      else
-        position_aux-=taxa;
-
-      if(position_aux>=100){
-          flag_posit=1;
-        position_aux =100;
-      }
-      else if(position_aux<=-100){
-        flag_posit=0;
-        position_aux =-100;
-      }
-
-      if(mot_pos==0){ 
-        mot_pos=6;
-        position=(int)position_aux*0.45;
-
-      }
-      else if(mot_pos==6){ 
-        mot_pos=8;
-        position=(int)position_aux*0.3;
-      }
-      else if(mot_pos==8){ 
-        mot_pos=12;
-        position=(int)position_aux*(-0.3);
-      }
-      else if(mot_pos==12){ 
-        mot_pos=14;
-        position=(int)position_aux*0.45;
-      }
-      else if(mot_pos==14){
-       mot_pos=0;
-       position=(int)position_aux*(-0.45);
-     }
-
-      //ROS_INFO("\rmotor escolhido: %d",mot_pos);
-    }
-
-
-   
-
-	if (mot_pos == 0)
-		mtr.joint_name = "prop_one";
-  else if (mot_pos == 1)
-		mtr.joint_name = "prop_two";
-	else if (mot_pos == 2)
-		mtr.joint_name = "prop_three";
-	else if (mot_pos == 3)
-		mtr.joint_name = "prop_four";
-	else if (mot_pos == 6)
-		mtr.joint_name = "vet_one";
-  else if (mot_pos == 7)
-		mtr.joint_name = "vet_two";
-	else if (mot_pos == 8)
-		mtr.joint_name = "vet_three";
-	else if (mot_pos == 9)
-		mtr.joint_name = "vet_four";
-	else if (mot_pos == 12)
-		mtr.joint_name = "leme_one";
-  else if (mot_pos == 13)
-		mtr.joint_name = "leme_two";
-	else if (mot_pos == 14)
-		mtr.joint_name = "leme_three";
-	else if (mot_pos == 15)
-		mtr.joint_name = "leme_four";
-	else if (mot_pos == 22)
-		mtr.joint_name = "digital_one";
-	else if (mot_pos == 23)
-		mtr.joint_name = "digital_two";
-	else{
-		mtr.joint_name = "prop_one";
-		ROS_INFO("invalid number, setting motor to prop_one");
-	}
-	mtr.position = int(position)*M_PI/180;
-        mtr.speed = 1.0;
-        mtr.acceleration=1.0;
- 
-
-    /**
-     * The publish() function is how you send messages. The parameter
-     * is the message object. The type of this object must agree with the type
-     * given as a template parameter to the advertise<>() call, as was done
-     * in the constructor above.
-     */
-    pub.publish(mtr);
-
-    ros::spinOnce();
-
-    loop_rate.sleep();
-
-  }
 
 
   return 0;

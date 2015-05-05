@@ -1,0 +1,17 @@
+
+<launch>
+    <node pkg="ros_pololu_servo" type="ros_pololu_servo_node" name="ros_pololu_servo_node1" output="screen">
+        <param name="pololu_motors_yaml" value="$(find ros_pololu_servo)/launch/pololu_motors.yaml" />
+        <param name="port_name" value="/dev/ttyACM0" />
+        <param name="baud_rate" value="115200" />
+        <param name="rate_hz" value="10" />
+        <param name="daisy_chain" value="false" />
+    </node> 
+    <node pkg="ros_pololu_servo" type="ros_pololu_servo_node" name="ros_pololu_servo_node2" output="screen">
+        <param name="pololu_motors_yaml" value="$(find ros_pololu_servo)/launch/pololu_motors.yaml" />
+        <param name="port_name" value="/dev/ttyACM0" />
+        <param name="baud_rate" value="115200" />
+        <param name="rate_hz" value="10" />
+        <param name="daisy_chain" value="false" />
+    </node>
+</launch>
