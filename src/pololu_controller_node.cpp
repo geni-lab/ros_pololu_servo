@@ -46,16 +46,16 @@ int main(int argc,char**argv)
 
     ros::Rate rate(controller.get_rate_hz());
 
-	while(ros::ok())
-	{
-	    controller.publish_motor_state();
-		ros::spinOnce();
+    while(ros::ok())
+    {
+        controller.publish_motor_state();
+        ros::spinOnce();
         rate.sleep();
-	}
+    }
 
-	//controller.~PololuController();
+    //controller.~PololuController();
 
-	ROS_INFO("Exited ros_polou_controller_node");
+    ROS_INFO("Exited ros_polou_controller_node");
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
