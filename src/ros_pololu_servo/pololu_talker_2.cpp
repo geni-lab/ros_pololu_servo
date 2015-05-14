@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     int mode=1;           //modo de operação do nó talker2:: 0= variable 1 = manual.
     int flag_inic=0;      //flag para determinar se o nó está no primeiro loop ou não
     int flag_posit=0;     //flag para determinar se a opsição aumentará ou diminuirá no modo automático. 0 -> posit increasing, 1-> posit decreasing
-    int taxa=3 ;          //variável para a taxa de variação da posição no modo automático
+    int taxa=1;           //variável para a taxa de variação da posição no modo automático
     char c;
 
 
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
         if(mode==1)
             do
             {
-                ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable with five motors (not recommended))");
+                ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable with five motors (not recommended)");
             }
             while (((scanf("%d%c", &mode, &c)!=2 || c!='\n') && clean_stdin()));
         if(mode!=0 && mode != 2 && mode !=1)
@@ -93,9 +93,27 @@ int main(int argc, char **argv)
             do
             {
                 ROS_INFO("Which motor?");
-                if(mode==0) flag_inic=1;
             }
             while (((scanf("%d%c", &mot_pos, &c)!=2 || c!='\n') && clean_stdin()));
+
+
+        if((mode==0||mode==2)&&flag_inic==0){
+            flag_inic=1;
+            do
+            {
+                ROS_INFO("Enter initial position, please");
+            }
+            while (((scanf("%d%c", &position, &c)!=2 || c!='\n') && clean_stdin())); 
+            do
+            {
+                ROS_INFO("Enter velocity, please");
+            }
+            while (((scanf("%d%c", &taxa, &c)!=2 || c!='\n') && clean_stdin())); 
+            if(taxa<0){
+                taxa=-taxa;
+                flag_posit=!flag_posit;
+            }
+        }
         if(mode==0)
         {
             if(!flag_posit)
