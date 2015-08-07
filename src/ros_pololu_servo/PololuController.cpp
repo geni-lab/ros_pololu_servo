@@ -87,7 +87,11 @@ bool PololuController::initialize()
 
     // Setup publisher and subscriber
     motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
-    motor_cmd_sub = n.subscribe("pololu/command", 10, &PololuController::motor_command_callback, this);
+    motor_cmd_sub = n.subscribe("pololu/command_motor", 10, &PololuController::motor_command_callback, this);
+
+    digital_state_pub = n.advertise<ros_pololu_servo::DigitalState>("/pololu/digital_state", 10);
+    digital_cmd_sub = n.subscribe("pololu/command_digital", 10, &PololuController::motor_command_callback, this);
+
 
     // Setup services
     motor_range_srv = n.advertiseService("pololu/motor_range", &PololuController::motor_range_callback, this);

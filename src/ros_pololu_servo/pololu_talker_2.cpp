@@ -1,5 +1,6 @@
 #include <ros_pololu_servo/PololuController.h>
 #include <ros_pololu_servo/PololuMath.h>
+#include <polstro/PolstroSerialInterface.h>
 #include <string>
 #include <ros/ros.h>
 #include <ros_pololu_servo/MotorCommand.h>
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
      * than we can send them, the number here specifies how many messages to
      * buffer up before throwing some away.
      */
-    ros::Publisher pub = n.advertise<ros_pololu_servo::MotorCommand>("/pololu/command", 1000); //avisa que irá publicar no tópico /pololu/command
+    ros::Publisher pub = n.advertise<ros_pololu_servo::MotorCommand>("/pololu/command_motor", 1000); //avisa que irá publicar no tópico /pololu/command_motor
 
     ros::Rate loop_rate(10);
 
@@ -68,17 +69,16 @@ int main(int argc, char **argv)
     int taxa=1;           //variável para a taxa de variação da posição no modo automático
     char c;
 
-
     ros_pololu_servo::MotorCommand mtr;     //objeto da mensagem que será publicada
     while (ros::ok())
     {
         if(mode==1)
             do
             {
-                ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable with five motors (not recommended)");
+                ROS_INFO("\nSelect Mode:\n(0)- automatically variable (with one motor)\n(1)- manual\n(2)- automatically variable with five motors (not recommended)\n");
             }
             while (((scanf("%d%c", &mode, &c)!=2 || c!='\n') && clean_stdin()));
-        if(mode!=0 && mode != 2 && mode !=1)
+        if(mode!=0 && mode != 1 && mode !=2 && mode !=3 )
         {
             ROS_INFO("Mode selected is invalid, setting to manual mode");
             mode =1;
@@ -177,6 +177,7 @@ int main(int argc, char **argv)
             }
 //ROS_INFO("\rmotor escolhido: %d",mot_pos);
         }
+   
         if (mot_pos == 0)
             mtr.joint_name = "prop_one";
         else if (mot_pos == 1)

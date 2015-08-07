@@ -162,7 +162,7 @@ leme_four:
 
 #Digital Outputs
 
-digital_one:
+digital_o_one:
   pololu_id: 12
   motor_id: 22
   init: 1499
@@ -175,7 +175,7 @@ digital_one:
     max_pulse: 2000
     max_angle: 500
 
-digital_two:
+digital_o_two:
   pololu_id: 12
   motor_id: 23
   init: 1499
@@ -187,3 +187,23 @@ digital_two:
     min_angle: -500
     max_pulse: 2000
     max_angle: 500
+
+#Digital Inputs
+
+digital_i_one:
+  pololu_id: 12
+  motor_id: 18
+  init: 1499
+  min: 1000
+  max: 2000
+  reverse: false
+  calibration:
+    min_pulse: 1000
+    min_angle: -500
+    max_pulse: 2000
+    max_angle: 500
+
+
+
+
+

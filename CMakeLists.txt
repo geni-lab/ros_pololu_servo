@@ -57,6 +57,8 @@ add_message_files(
    MotorCommand.msg
    MotorState.msg
    MotorStateList.msg
+   DigitalCommand.msg
+   DigitalState.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -124,6 +126,7 @@ add_library(ros_pololu_servo
  )
 
 
+
 ## Declare a cpp executable
 add_executable(ros_pololu_servo_node src/pololu_controller_node.cpp)
 
@@ -137,16 +140,23 @@ target_link_libraries(ros_pololu_servo
  )
 
 ## Specify libraries to link a library or executable target against
+
 target_link_libraries(ros_pololu_servo_node
-   ${catkin_LIBRARIES}
-   ros_pololu_servo
-   polstro
-   yaml-cpp
- )
+${catkin_LIBRARIES}
+ros_pololu_servo
+polstro
+yaml-cpp
+)
 
 add_executable(talker2 src/ros_pololu_servo/pololu_talker_2.cpp)
 target_link_libraries(talker2 ${catkin_LIBRARIES})
 add_dependencies(talker2 ${catkin_EXPORTED_TARGETS})
+
+add_executable(reader src/ros_pololu_servo/pololu_digital_reader.cpp)
+target_link_libraries(reader ${catkin_LIBRARIES})
+add_dependencies(reader ${catkin_EXPORTED_TARGETS})
+
+
 #############
 ## Install ##
 #############

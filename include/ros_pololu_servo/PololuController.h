@@ -43,6 +43,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ros_pololu_servo/MotorState.h>
 #include <ros_pololu_servo/MotorStateList.h>
 #include <ros_pololu_servo/MotorRange.h>
+#include <ros_pololu_servo/DigitalCommand.h>
+#include <ros_pololu_servo/DigitalState.h>
+
 
 struct Motor;
 
@@ -51,6 +54,10 @@ class PololuController
     private:
         ros::Publisher motor_state_list_pub;
         ros::Subscriber motor_cmd_sub;
+        
+        ros::Publisher digital_state_pub;
+        ros::Subscriber digital_cmd_sub;
+
         ros::ServiceServer motor_range_srv; // = n.advertiseService("add_two_ints", add);
         ros::NodeHandle n;
         //ros::Rate rate;
