@@ -69,13 +69,16 @@ int main(int argc, char **argv)
                 ROS_INFO("\nPress 1 if you want to read the state of the digital inputs, to kill the node press 0.\n");
             }
             while (((scanf("%d%c", &mode, &c)!=2 || c!='\n') && clean_stdin()));
-        if(mode!=0 && mode != 1)
-        {
-            ROS_INFO("Mode selected is invalid, setting to mode 1");
-            mode =1;
-        }
+
         if(mode==1)
             command = true;
+
+        if(mode!=0 && mode != 1)
+        {
+            ROS_INFO("Mode selected is invalid");
+            mode =1;
+            command = false;
+        }
 
         if(mode==0)
         {

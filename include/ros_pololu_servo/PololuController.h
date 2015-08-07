@@ -54,7 +54,7 @@ class PololuController
     private:
         ros::Publisher motor_state_list_pub;
         ros::Subscriber motor_cmd_sub;
-        
+
         ros::Publisher digital_state_pub;
         ros::Subscriber digital_cmd_sub;
 
@@ -68,6 +68,8 @@ class PololuController
         bool daisy_chain;
 
         ros_pololu_servo::MotorStateList motor_state_list;
+        ros_pololu_servo::DigitalState digital_state;
+        
         map<string, Motor> motors;
 
     public:
@@ -78,4 +80,5 @@ class PololuController
         double get_rate_hz();
         void publish_motor_state();
         void motor_command_callback(const ros_pololu_servo::MotorCommand::ConstPtr& msg);
+        void digital_command_callback(const ros_pololu_servo::DigitalCommand::ConstPtr& msg);
 };

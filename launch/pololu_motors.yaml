@@ -175,6 +175,7 @@ digital_o_one:
     max_pulse: 2000
     max_angle: 500
 
+
 digital_o_two:
   pololu_id: 12
   motor_id: 23
@@ -187,6 +188,7 @@ digital_o_two:
     min_angle: -500
     max_pulse: 2000
     max_angle: 500
+
 
 #Digital Inputs
 
