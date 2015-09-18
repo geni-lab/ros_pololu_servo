@@ -251,24 +251,31 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
 void PololuController::digital_command_callback(const DigitalCommand::ConstPtr& msg)
 {
     if(msg->command==true) {
+        
         ROS_INFO("Recevied command to read digital inputs");
 
         bool val_helio  = false;
         bool garateia   = false;
         bool comutador  = false;
         unsigned short value = 0;
+        unsigned char id;
 
-        serial_interface->getPositionCP(18,value);
+        id=18;
+        serial_interface->getPositionCP(id,value);
         if(value==1023) comutador = true;
-        serial_interface->getPositionCP(19,value);
+
+        id=19;
+        serial_interface->getPositionCP(id,value);
         if(value==1023) val_helio = true;
-        serial_interface->getPositionCP(20,value);
+
+        id=20;
+        serial_interface->getPositionCP(id,value);
         if(value==1023) garateia = true;
 
 
-        digital_state.val_helio=val_helio;
-        digital_state.garateia= garateia;
-        digital_state.comutador = comutador;
+        digital_state.val_helio =   val_helio;
+        digital_state.garateia  =   garateia;
+        digital_state.comutador =   comutador;
     }
     
     digital_state_pub.publish(digital_state);

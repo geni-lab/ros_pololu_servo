@@ -148,11 +148,11 @@ polstro
 yaml-cpp
 )
 
-add_executable(talker2 src/ros_pololu_servo/pololu_talker_2.cpp)
+add_executable(talker2 src/pololu_talker_2.cpp)
 target_link_libraries(talker2 ${catkin_LIBRARIES})
 add_dependencies(talker2 ${catkin_EXPORTED_TARGETS})
 
-add_executable(reader src/ros_pololu_servo/pololu_digital_reader.cpp)
+add_executable(reader src/pololu_digital_reader.cpp)
 target_link_libraries(reader ${catkin_LIBRARIES})
 add_dependencies(reader ${catkin_EXPORTED_TARGETS})
 
