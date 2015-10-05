@@ -150,79 +150,86 @@ int main(int argc, char **argv)
                 flag_posit=0;
                 position_aux =-100;
             }
-            if(mot_pos==0)
-            {
-                mot_pos=6;
+
+                mtr.speed = 1.0;
+                mtr.acceleration=1.0;
+
+                mtr.joint_name = "prop_one";
                 position=(int)position_aux*0.45;
-            }
-            else if(mot_pos==6)
-            {
-                mot_pos=8;
-                position=(int)position_aux*0.3;
-            }
-            else if(mot_pos==8)
-            {
-                mot_pos=12;
+                mtr.position = int(position)*M_PI/180;
+                pub.publish(mtr);
+
+                mtr.joint_name = "vet_one";
                 position=(int)position_aux*(-0.3);
-            }
-            else if(mot_pos==12)
-            {
-                mot_pos=14;
-                position=(int)position_aux*0.45;
-            }
-            else if(mot_pos==14)
-            {
-                mot_pos=0;
+                mtr.position = int(position)*M_PI/180;
+                pub.publish(mtr);
+
+                mtr.joint_name = "vet_three";
+                position=(int)position_aux*0.3;
+                mtr.position = int(position)*M_PI/180;
+                pub.publish(mtr);
+
+                mtr.joint_name = "leme_one";
+                position=(int)position_aux*0.1;
+                mtr.position = int(position)*M_PI/180;
+                pub.publish(mtr);
+
+                mtr.joint_name = "leme_three";
                 position=(int)position_aux*(-0.45);
+                mtr.position = int(position)*M_PI/180;
+                pub.publish(mtr);
+
+            ros::spinOnce();
+            loop_rate.sleep();
+
+        }
+        else{
+            if (mot_pos == 0)
+                mtr.joint_name = "prop_one";
+            else if (mot_pos == 1)
+                mtr.joint_name = "prop_two";
+            else if (mot_pos == 2)
+                mtr.joint_name = "prop_three";
+            else if (mot_pos == 3)
+                mtr.joint_name = "prop_four";
+            else if (mot_pos == 6)
+                mtr.joint_name = "vet_one";
+            else if (mot_pos == 7)
+                mtr.joint_name = "vet_two";
+            else if (mot_pos == 8)
+                mtr.joint_name = "vet_three";
+            else if (mot_pos == 9)
+                mtr.joint_name = "vet_four";
+            else if (mot_pos == 12)
+                mtr.joint_name = "leme_one";
+            else if (mot_pos == 13)
+                mtr.joint_name = "leme_two";
+            else if (mot_pos == 14)
+                mtr.joint_name = "leme_three";
+            else if (mot_pos == 15)
+                mtr.joint_name = "leme_four";
+            else if (mot_pos == 22)
+                mtr.joint_name = "digital_one";
+            else if (mot_pos == 23)
+                mtr.joint_name = "digital_two";
+            else
+            {
+                mtr.joint_name = "prop_one";
+                ROS_INFO("invalid number, setting motor to prop_one");
             }
-//ROS_INFO("\rmotor escolhido: %d",mot_pos);
+            mtr.position = int(position)*M_PI/180;
+            mtr.speed = 1.0;
+            mtr.acceleration=1.0;
+            /**
+            * The publish() function is how you send messages. The parameter
+            * is the message object. The type of this object must agree with the type
+            * given as a template parameter to the advertise<>() call, as was done
+            * in the constructor above.
+            */
+            pub.publish(mtr);
+            ros::spinOnce();
+            loop_rate.sleep();
         }
-   
-        if (mot_pos == 0)
-            mtr.joint_name = "prop_one";
-        else if (mot_pos == 1)
-            mtr.joint_name = "prop_two";
-        else if (mot_pos == 2)
-            mtr.joint_name = "prop_three";
-        else if (mot_pos == 3)
-            mtr.joint_name = "prop_four";
-        else if (mot_pos == 6)
-            mtr.joint_name = "vet_one";
-        else if (mot_pos == 7)
-            mtr.joint_name = "vet_two";
-        else if (mot_pos == 8)
-            mtr.joint_name = "vet_three";
-        else if (mot_pos == 9)
-            mtr.joint_name = "vet_four";
-        else if (mot_pos == 12)
-            mtr.joint_name = "leme_one";
-        else if (mot_pos == 13)
-            mtr.joint_name = "leme_two";
-        else if (mot_pos == 14)
-            mtr.joint_name = "leme_three";
-        else if (mot_pos == 15)
-            mtr.joint_name = "leme_four";
-        else if (mot_pos == 22)
-            mtr.joint_name = "digital_one";
-        else if (mot_pos == 23)
-            mtr.joint_name = "digital_two";
-        else
-        {
-            mtr.joint_name = "prop_one";
-            ROS_INFO("invalid number, setting motor to prop_one");
-        }
-        mtr.position = int(position)*M_PI/180;
-        mtr.speed = 1.0;
-        mtr.acceleration=1.0;
-        /**
-        * The publish() function is how you send messages. The parameter
-        * is the message object. The type of this object must agree with the type
-        * given as a template parameter to the advertise<>() call, as was done
-        * in the constructor above.
-        */
-        pub.publish(mtr);
-        ros::spinOnce();
-        loop_rate.sleep();
     }
 
 

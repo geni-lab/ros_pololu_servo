@@ -48,6 +48,7 @@ int main(int argc,char**argv)
 
     while(ros::ok())
     {
+        ROS_INFO("publishing\n");
         controller.publish_motor_state();
         ros::spinOnce();
         rate.sleep();

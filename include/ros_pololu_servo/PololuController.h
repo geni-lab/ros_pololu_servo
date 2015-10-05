@@ -38,7 +38,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ros_pololu_servo/PololuYamlParser.h>
 #include <ros_pololu_servo/Motor.h>
 #include <ros_pololu_servo/Calibration.h>
-#include <ros_pololu_servo/PololuController.h>
 #include <ros_pololu_servo/MotorCommand.h>
 #include <ros_pololu_servo/MotorState.h>
 #include <ros_pololu_servo/MotorStateList.h>

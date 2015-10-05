@@ -122,7 +122,6 @@ bool SerialInterface::getPositionCP( unsigned char channelNumber, unsigned short
 {
 	if ( !isOpen() )
 		return false;
-	
 	position = 0;
 
 	unsigned char command[2] = { 0x90, channelNumber };

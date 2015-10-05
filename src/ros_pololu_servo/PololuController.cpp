@@ -148,12 +148,11 @@ void PololuController::publish_motor_state()
        //he's dividing by four to convert Maestro's PWM pulse to what we're working with.
         pulse = pulse * 0.25;
 
-
         motor_state.name = motor.name;
         motor_state.pololu_id = motor.pololu_id;
         motor_state.motor_id = motor.motor_id;
 
-        //yay, conversion operations
+        //conversion operations
         motor_state.radians = PololuMath::to_radians(pulse, motor) * motor.direction;
         motor_state.degrees = to_degrees(motor_state.radians); // (this looks like an error): * motor.direction;
         motor_state.pulse = pulse;
@@ -168,6 +167,7 @@ void PololuController::publish_motor_state()
 
         motor_state_list.motor_states.push_back(motor_state);
     }
+
 
     motor_state_list_pub.publish(motor_state_list);
 }
