@@ -1,10 +1,13 @@
 #include <ros/ros.h>
 #include <ros_pololu_servo/DigitalCommand.h>
+#include <ros_pololu_servo/DigitalState.h>
 #include <stdio.h>
 #include <stdlib.h>
 /**
  * Código para a publicação de mensagens do tipo ros_pololu_servo::MotorCommand no tópico /pololu/comand
  */
+
+void digital_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg);
 int clean_stdin()
 {
     while (getchar()!='\n');
@@ -49,9 +52,10 @@ int main(int argc, char **argv)
      * than we can send them, the number here specifies how many messages to
      * buffer up before throwing some away.
      */
-    ros::Publisher pub = n.advertise<ros_pololu_servo::DigitalCommand>("/pololu/command_digital", 1000); //avisa que irá publicar no tópico /pololu/command_digital
+    ros::Publisher pub = n.advertise<ros_pololu_servo::DigitalCommand>("/pololu/command_digital", 100); //avisa que irá publicar no tópico /pololu/command_digital
+    // ros::Subscriber sub = n.subscribe("pololu/digital_state", 100, digital_received_callback);
 
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(100);
 
 
     bool command = false; 
@@ -86,17 +90,19 @@ int main(int argc, char **argv)
             command= false;
         }
 
-        dig_msg.command = command;
-
+        
+        
         /**
         * The publish() function is how you send messages. The parameter
         * is the message object. The type of this object must agree with the type
         * given as a template parameter to the advertise<>() call, as was done
         * in the constructor above.
         */
+        dig_msg.command = command;
         pub.publish(dig_msg);
-        ros::spinOnce();
         loop_rate.sleep();
+        ros::spinOnce();
+ 
     }
 
 
@@ -104,3 +110,9 @@ int main(int argc, char **argv)
     return 0;
 }
 
+
+// void  digital_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg)
+// {
+// ROS_INFO("\nComutador:  %s\nHelio:      %s\nGarteia:    %s\n",(msg->comutador)? "true" : "false",(msg->val_helio)? "true" : "false",(msg->garateia)? "true" : "false");    
+
+// }
