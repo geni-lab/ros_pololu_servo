@@ -96,12 +96,16 @@ int clean_stdin()
 
 void  digital_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg)
 {
-ROS_INFO("\nComutador:  %s\nHelio:      %s\nGarteia:    %s\n",(msg->comutador)? "true" : "false",(msg->val_helio)? "true" : "false",(msg->garateia)? "true" : "false");    
-
+    chaves[0]=msg->comutador;
+    chaves[1]=msg->val_helio;
+    chaves[2]=msg->garateia;
 }
 
 void  RX_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg)
 {
-ROS_INFO("\nComutador:  %s\nHelio:      %s\nGarteia:    %s\n",(msg->comutador)? "true" : "false",(msg->val_helio)? "true" : "false",(msg->garateia)? "true" : "false");    
+    RX_received[0]=msg->duty_cycle_1;
+    RX_received[1]=msg->duty_cycle_2;
+    RX_received[2]=msg->duty_cycle_3;
+    RX_received[3]=msg->duty_cycle_4;
 
 }
