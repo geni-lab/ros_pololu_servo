@@ -60,18 +60,20 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(100);
 
 
-    int mot_pos = 0;      //variável para determinar para qual motor a mensagem será enviada
-    float position=0;       //variável que determina posição do motor que será enviada na mensagem
+    int mot_pos = 0;                        //variável para determinar para qual motor a mensagem será enviada
+    float position=0;                       //variável que determina posição do motor que será enviada na mensagem
     float position_motors[5]= {0,0,0,0,0};
-    float velocidades[5] ={1, 2, 3, 2,1};
-    int mode=1;           //modo de operação do nó talker2:: 0= variable 1 = manual.
-    int flag_inic=0;      //flag para determinar se o nó está no primeiro loop ou não
-    int flag_posit=0;     //flag para determinar se a opsição aumentará ou diminuirá no modo automático. 0 -> posit increasing, 1-> posit decreasing
+    float velocidades[5] ={1, 2, 3, -2,-1};
+    int mode=1;                             //modo de operação do nó talker2:: 0= variable 1 = manual.
+    int flag_inic=0;                        //flag para determinar se o nó está no primeiro loop ou não
+    int flag_posit=0;                       //flag para determinar se a opsição aumentará ou diminuirá no modo automático. 0 -> posit increasing, 1-> posit decreasing
     int flag_position[5]= {0,0,0,0,0};
-    float taxa=1;           //variável para a taxa de variação da posição no modo automático
+    float taxa=1;                            //variável para a taxa de variação da posição no modo automático
     int i;
     int kill_node=0;
     char c;
+
+    
 
     ros_pololu_servo::MotorCommand mtr;     //objeto da mensagem que será publicada
     while (ros::ok()&&!kill_node)

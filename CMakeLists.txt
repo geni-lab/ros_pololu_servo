@@ -148,6 +148,10 @@ polstro
 yaml-cpp
 )
 
+add_executable(D_controller src/pololu_D_controller.cpp)
+target_link_libraries(D_controller ${catkin_LIBRARIES})
+add_dependencies(D_controller ${catkin_EXPORTED_TARGETS})
+
 add_executable(talker2 src/pololu_talker_2.cpp)
 target_link_libraries(talker2 ${catkin_LIBRARIES})
 add_dependencies(talker2 ${catkin_EXPORTED_TARGETS})
