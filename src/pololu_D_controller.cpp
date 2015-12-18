@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
+#include <yocto/PWM_info.h>
 # define M_PI           3.14159265358979323846
 /**
  * Código para simular o controlador, este código irá monitorar as chaves digitais (Comutador, garatéia e válvula de hélio) assim como o sinal recebido pelo RX
@@ -28,7 +29,7 @@ bool chaves[3]={0,0,0};
 
 int clean_stdin();
 void  digital_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg);
-void  RX_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg);
+void  RX_received_callback(const yocto::PWM_info::ConstPtr& msg);
 
 int main(int argc, char **argv)
 {
@@ -101,7 +102,7 @@ void  digital_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& 
     chaves[2]=msg->garateia;
 }
 
-void  RX_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg)
+void  RX_received_callback(const yocto::PWM_info::ConstPtr& msg)
 {
     RX_received[0]=msg->duty_cycle_1;
     RX_received[1]=msg->duty_cycle_2;
