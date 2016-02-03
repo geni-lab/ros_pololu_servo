@@ -130,6 +130,11 @@ add_library(ros_pololu_servo
 ## Declare a cpp executable
 add_executable(ros_pololu_servo_node src/pololu_controller_node.cpp)
 
+## Add cmake target dependencies of the executable/library
+## as an example, message headers may need to be generated before nodes
+##UPDATE IT @GIT!!! FOR GOD SAKE!!
+#add_dependencies(ros_pololu_servo_node ros_pololu_servo_generate_messages_cpp)
+add_dependencies(ros_pololu_servo ros_pololu_servo_generate_messages_cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -140,26 +145,26 @@ target_link_libraries(ros_pololu_servo
  )
 
 ## Specify libraries to link a library or executable target against
-
 target_link_libraries(ros_pololu_servo_node
-${catkin_LIBRARIES}
-ros_pololu_servo
-polstro
-yaml-cpp
+   ${catkin_LIBRARIES}
+   ros_pololu_servo
+   polstro
+   yaml-cpp
 )
 
+
 add_executable(D_controller src/pololu_D_controller.cpp)
-target_link_libraries(D_controller ${catkin_LIBRARIES})
 add_dependencies(D_controller ${catkin_EXPORTED_TARGETS})
+target_link_libraries(D_controller ${catkin_LIBRARIES})
+
 
 add_executable(talker2 src/pololu_talker_2.cpp)
-target_link_libraries(talker2 ${catkin_LIBRARIES})
 add_dependencies(talker2 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(talker2 ${catkin_LIBRARIES})
 
 add_executable(reader src/pololu_digital_reader.cpp)
-target_link_libraries(reader ${catkin_LIBRARIES})
 add_dependencies(reader ${catkin_EXPORTED_TARGETS})
-
+target_link_libraries(reader ${catkin_LIBRARIES})
 
 #############
 ## Install ##
