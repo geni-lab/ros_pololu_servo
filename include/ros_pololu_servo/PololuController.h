@@ -80,4 +80,5 @@ class PololuController
         void publish_motor_state();
         void motor_command_callback(const ros_pololu_servo::MotorCommand::ConstPtr& msg);
         void digital_command_callback(const ros_pololu_servo::DigitalCommand::ConstPtr& msg);
+        void publish_digital_state();
 };

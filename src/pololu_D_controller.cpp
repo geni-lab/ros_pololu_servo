@@ -11,7 +11,7 @@
 # define M_PI           3.14159265358979323846
 /**
  * Código para simular o controlador, este código irá monitorar as chaves digitais (Comutador, garatéia e válvula de hélio) assim como o sinal recebido pelo RX
- * e com essas informações irá controlar os 12 motores
+ * e com essas informações irá controlar os 12 motores ---- AINDA NÃO ESTA PRONTO
  */
 
 
@@ -79,8 +79,108 @@ int main(int argc, char **argv)
 
 
     ros_pololu_servo::MotorCommand mtr;     //objeto da mensagem que será publicada
+
+    int mot_pos = 0;                        //variável para determinar para qual motor a mensagem será enviada
+    float position=0;                       //variável que determina posição do motor que será enviada na mensagem
+    float position_motors[12]= {0,0,0,0,0,0,0,0,0,0,0,0};
+    float velocidades[12] ={ 2, 3, -2,-1, 2, 3, -2,-1, 2, 3, -2,-1};
+    int mode=1;                             //modo de operação do nó talker2:: 0= variable 1 = manual.
+    int flag_position[12]= {0,0,0,0,0,0,0,0,0,0,0,0};
+    float taxa=1;                            //variável para a taxa de variação da posição no modo automático
+    int i;
+    int kill_node=0;
+    char c;
+
+
+
     while (ros::ok())
     {
+
+
+    //        if(Get_comutacao())
+      if(true)  {
+            
+            mtr.speed = 1.0;
+            mtr.acceleration=1.0;
+
+            for(i=0;i<12;i++){
+    
+                if(taxa*velocidades[i]>=0)
+                {
+                     if(!flag_position[i])
+                        position_motors[i]+=velocidades[i]*taxa;
+                    else
+                        position_motors[i]-=velocidades[i]*taxa;
+                }
+                  else{
+                    if(!flag_position[i])
+                        position_motors[i]-=velocidades[i]*taxa;
+                    else
+                        position_motors[i]+=velocidades[i]*taxa;
+                }
+                
+                if(position_motors[i]>=45)
+                {
+                    flag_position[i]=1;
+                    position_motors[i] =45;
+                }
+                else if(position_motors[i]<=-45)
+                {
+                    flag_position[i]=0;
+                    position_motors[i] =-45;
+                }
+
+
+                switch(i){
+                    case 0:
+                        mtr.joint_name = "prop_one";
+                    break;
+                    case 1:
+                        mtr.joint_name = "prop_two";
+                    break;
+                    case 2:
+                        mtr.joint_name = "prop_three";
+                    break;
+                    case 3:
+                        mtr.joint_name = "prop_four";
+                    break;
+                    case 4:
+                        mtr.joint_name = "vet_one";
+                    break;
+                    case 5:
+                        mtr.joint_name = "vet_two";
+                    break;
+                    case 6:
+                        mtr.joint_name = "vet_three";
+                    break;
+                    case 7:
+                        mtr.joint_name = "vet_four";
+                    break;
+                    case 8:
+                        mtr.joint_name = "leme_one";
+                    break;
+                    case 9:
+                        mtr.joint_name = "leme_two";
+                    break;
+                    case 10:
+                        mtr.joint_name = "leme_three";
+                    break;
+                    case 11:
+                        mtr.joint_name = "leme_four";
+                    break;
+                }
+
+                position=(int)position_motors[i];
+                mtr.position = int(position)*M_PI/180;
+                pub_motor.publish(mtr);
+
+            }
+        }
+
+            ros::spinOnce();
+            loop_rate.sleep();
+        
+
 
     }
 

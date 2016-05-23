@@ -132,6 +132,7 @@ add_executable(ros_pololu_servo_node src/pololu_controller_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
+##UPDATE IT @GIT!!! FOR GOD SAKE!!
 #add_dependencies(ros_pololu_servo_node ros_pololu_servo_generate_messages_cpp)
 add_dependencies(ros_pololu_servo ros_pololu_servo_generate_messages_cpp)
 

@@ -8,8 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 # define M_PI           3.14159265358979323846
+# define manual_mode 1
+# define autom5_mode 2
+# define autom1_mode 0
 /**
  * Código para a publicação de mensagens do tipo ros_pololu_servo::MotorCommand no tópico /pololu/comand
+ * Simula o que o nó controlador do DRONI irá fazer apenas para testar as rotinas de comutação
  */
 int clean_stdin()
 {
@@ -64,7 +68,7 @@ int main(int argc, char **argv)
     float position=0;                       //variável que determina posição do motor que será enviada na mensagem
     float position_motors[5]= {0,0,0,0,0};
     float velocidades[5] ={1, 2, 3, -2,-1};
-    int mode=1;                             //modo de operação do nó talker2:: 0= variable 1 = manual.
+    int mode= manual_mode;                  //modo de operação do nó talker2:: 0= variable 1 = manual.
     int flag_inic=0;                        //flag para determinar se o nó está no primeiro loop ou não
     int flag_posit=0;                       //flag para determinar se a opsição aumentará ou diminuirá no modo automático. 0 -> posit increasing, 1-> posit decreasing
     int flag_position[5]= {0,0,0,0,0};
@@ -73,17 +77,16 @@ int main(int argc, char **argv)
     int kill_node=0;
     char c;
 
-    
-
     ros_pololu_servo::MotorCommand mtr;     //objeto da mensagem que será publicada
+
     while (ros::ok()&&!kill_node)
     {
-        if(mode==1)
+        if(mode== manual_mode)
         {
             do
             {
                 ROS_INFO("\n\nSelect Mode:\n\n(0)- Automatically variable (with one motor).\n(1)- Manual.\n(2)- Automatically variable with five motors.\n(3)- Kill this node.\n");
-            }
+            }  // Seleciona o modo de operação do nó
             while (((scanf("%d%c", &mode, &c)!=2 || c!='\n') && clean_stdin()));
         }
 
@@ -93,13 +96,13 @@ int main(int argc, char **argv)
             break;
         }
 
-        if(mode!=0 && mode != 1 && mode !=2 )
+        if(mode!=autom1_mode && mode != manual_mode && mode != autom5_mode )
         {
             ROS_INFO("Mode selected is invalid, setting to manual mode");
-            mode =1;
+            mode = manual_mode;
         }
 
-        if(mode==1)
+        if(mode==manual_mode)
         {
             do
             {
@@ -115,7 +118,7 @@ int main(int argc, char **argv)
 
         }
 
-        if(flag_inic==0&&mode==0)
+        if(flag_inic==0&&mode==autom1_mode)
         {
             flag_inic=1;
 
@@ -137,7 +140,7 @@ int main(int argc, char **argv)
         }
 
 
-        if(flag_inic==0&&mode==2){
+        if(flag_inic==0&&mode== autom5_mode){
 
             flag_inic=1;
             do
@@ -151,7 +154,7 @@ int main(int argc, char **argv)
             }
         }
 
-        if(mode==0)
+        if(mode==autom1_mode)
         {
             if(!flag_posit)
                 position+=taxa;
@@ -169,8 +172,9 @@ int main(int argc, char **argv)
             }
         }
 
-        if(mode==0 || mode ==1)
+        if(mode==autom1_mode || mode == manual_mode)
         {
+            //trecho que irá definir a mensagem a ser enviada
             if (mot_pos == 0)
                 mtr.joint_name = "prop_one";
             else if (mot_pos == 1)
@@ -179,26 +183,26 @@ int main(int argc, char **argv)
                 mtr.joint_name = "prop_three";
             else if (mot_pos == 3)
                 mtr.joint_name = "prop_four";
-            else if (mot_pos == 6)
+            else if (mot_pos == 4)
                 mtr.joint_name = "vet_one";
-            else if (mot_pos == 7)
+            else if (mot_pos == 5)
                 mtr.joint_name = "vet_two";
-            else if (mot_pos == 8)
+            else if (mot_pos == 6)
                 mtr.joint_name = "vet_three";
-            else if (mot_pos == 9)
+            else if (mot_pos == 7)
                 mtr.joint_name = "vet_four";
-            else if (mot_pos == 12)
+            else if (mot_pos == 8)
                 mtr.joint_name = "leme_one";
-            else if (mot_pos == 13)
+            else if (mot_pos == 9)
                 mtr.joint_name = "leme_two";
-            else if (mot_pos == 14)
+            else if (mot_pos == 10)
                 mtr.joint_name = "leme_three";
-            else if (mot_pos == 15)
+            else if (mot_pos == 11)
                 mtr.joint_name = "leme_four";
-            else if (mot_pos == 22)
-                mtr.joint_name = "digital_one";
-            else if (mot_pos == 23)
-                mtr.joint_name = "digital_two";
+            else if (mot_pos == 18)
+                mtr.joint_name = "DO_helio";
+            else if (mot_pos == 19)
+                mtr.joint_name = "DO_garteia";
             else
             {
                 mtr.joint_name = "prop_one";
@@ -219,7 +223,7 @@ int main(int argc, char **argv)
         }
 
 
-        if(mode==2)
+        if(mode== autom5_mode)
         {
             /**aqui serão utilizados os motores 0 (propulsão) 6 e 8 (vetorização) 12 e 14 (lemes)*/
 
@@ -227,10 +231,20 @@ int main(int argc, char **argv)
             mtr.acceleration=1.0;
 
             for(i=0;i<5;i++){
-                if(!flag_position[i])
-                    position_motors[i]+=velocidades[i]*taxa;
-                else
-                    position_motors[i]-=velocidades[i]*taxa;
+	
+                if(taxa*velocidades[i]>=0)
+		        {
+			         if(!flag_position[i])
+	                    position_motors[i]+=velocidades[i]*taxa;
+	                else
+	                    position_motors[i]-=velocidades[i]*taxa;
+                }
+		          else{
+	                if(!flag_position[i])
+	                    position_motors[i]-=velocidades[i]*taxa;
+	                else
+	                    position_motors[i]+=velocidades[i]*taxa;
+                }
                 
                 if(position_motors[i]>=45)
                 {

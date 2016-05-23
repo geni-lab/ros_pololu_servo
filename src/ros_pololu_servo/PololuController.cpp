@@ -76,6 +76,7 @@ bool PololuController::initialize()
     nh.param<int>("rate_hz", rate_hz, 10);
     nh.param<bool>("daisy_chain", daisy_chain, false);
 
+
     // Create serial interface
     serial_interface = Polstro::SerialInterface::createSerialInterface(port_name, baud_rate);
 
@@ -85,6 +86,7 @@ bool PololuController::initialize()
         success = false;
     }
 
+
     // Setup publisher and subscriber
     motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
     motor_cmd_sub = n.subscribe("pololu/command_motor", 10, &PololuController::motor_command_callback, this);
@@ -93,11 +95,14 @@ bool PololuController::initialize()
     digital_cmd_sub = n.subscribe("pololu/command_digital", 10, &PololuController::digital_command_callback, this);
 
 
+
     // Setup services
     motor_range_srv = n.advertiseService("pololu/motor_range", &PololuController::motor_range_callback, this);
 
     return success;
 }
+
+
 
 bool PololuController::motor_range_callback(MotorRange::Request &req, MotorRange::Response &res)
 {
@@ -248,35 +253,42 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
 }
 
 
+//This will read the digital inputs on the channels 18 19 and 20
 void PololuController::digital_command_callback(const DigitalCommand::ConstPtr& msg)
 {
     if(msg->command==true) {
-        
         ROS_INFO("Recevied command to read digital inputs");
-
-        bool val_helio  = false;
-        bool garateia   = false;
-        bool comutador  = false;
-        unsigned short value = 0;
-        unsigned char id;
-
-        id=18;
-        serial_interface->getPositionCP(id,value);
-        if(value==1023) comutador = true;
-
-        id=19;
-        serial_interface->getPositionCP(id,value);
-        if(value==1023) val_helio = true;
-
-        id=20;
-        serial_interface->getPositionCP(id,value);
-        if(value==1023) garateia = true;
-
-
-        digital_state.val_helio =   val_helio;
-        digital_state.garateia  =   garateia;
-        digital_state.comutador =   comutador;
+        publish_digital_state();
     }
+    
+
+}
+void PololuController::publish_digital_state()
+{
+
+    bool val_helio  = false;
+    bool garateia   = false;
+    bool comutador  = false;
+    unsigned short value = 0;
+    unsigned char id;
+
+    id=21;
+    serial_interface->getPositionCP(id,value);
+    if(value==1023) comutador = true;
+
+    id=23;
+    serial_interface->getPositionCP(id,value);
+    if(value==1023) val_helio = true;
+
+    id=22;
+    serial_interface->getPositionCP(id,value);
+    if(value==1023) garateia = true;
+
+
+    digital_state.val_helio =   val_helio;
+    digital_state.garateia  =   garateia;
+    digital_state.comutador =   comutador;
+
     
     digital_state_pub.publish(digital_state);
 

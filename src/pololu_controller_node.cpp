@@ -48,8 +48,9 @@ int main(int argc,char**argv)
 
     while(ros::ok())
     {
-        ROS_INFO("publishing\n");
+        ROS_INFO_THROTTLE(1,"publishing\n");
         controller.publish_motor_state();
+        controller.publish_digital_state(); //Neste modo o controlador irá fazer a leitura dos canais digitais a todo o momento, assim como o nó do yocto
         ros::spinOnce();
         rate.sleep();
     }

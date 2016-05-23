@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 /**
- * Código para a publicação de mensagens do tipo ros_pololu_servo::MotorCommand no tópico /pololu/comand
+ * Código para a publicação de mensagens do tipo ros_pololu_servo::MotorCommand no tópico /pololu/comand 
+ * caso o nó controller não esteja no modo de leitura contínua
  */
 
 void digital_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg);
@@ -52,8 +53,8 @@ int main(int argc, char **argv)
      * than we can send them, the number here specifies how many messages to
      * buffer up before throwing some away.
      */
-    ros::Publisher pub = n.advertise<ros_pololu_servo::DigitalCommand>("/pololu/command_digital", 100); //avisa que irá publicar no tópico /pololu/command_digital
-    // ros::Subscriber sub = n.subscribe("pololu/digital_state", 100, digital_received_callback);
+    ros::Publisher pub = n.advertise<ros_pololu_servo::DigitalCommand>("/pololu/command_digital", 100); 
+    //avisa que irá publicar no tópico /pololu/command_digital
 
     ros::Rate loop_rate(100);
 
@@ -110,9 +111,3 @@ int main(int argc, char **argv)
     return 0;
 }
 
-
-// void  digital_received_callback(const ros_pololu_servo::DigitalState::ConstPtr& msg)
-// {
-// ROS_INFO("\nComutador:  %s\nHelio:      %s\nGarteia:    %s\n",(msg->comutador)? "true" : "false",(msg->val_helio)? "true" : "false",(msg->garateia)? "true" : "false");    
-
-// }
