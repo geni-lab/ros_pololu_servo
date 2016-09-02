@@ -99,7 +99,7 @@ bool SerialInterfacePOSIX::writeBytes( const unsigned char* data, unsigned int n
 	}
 	else if ( ret!=numBytesToWrite )
 	{
-		printf("Error writing. Wrote %d bytes instead of %d\n", ret, numBytesToWrite );
+		printf("Error writing. Wrote %ld bytes instead of %d\n", ret, numBytesToWrite );
 		return false;
 	}
 
@@ -120,7 +120,7 @@ bool SerialInterfacePOSIX::readBytes( unsigned char* data, unsigned int numBytes
 	}
 	else if ( ret!=numBytesToRead )
 	{
-		printf("Error reading. Read %d bytes instead of %d\n", ret, numBytesToRead );
+		printf("Error reading. Read %ld bytes instead of %d\n", ret, numBytesToRead );
 		return false;
 	}
 	return true;
