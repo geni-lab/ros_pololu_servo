@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ros_pololu_servo/PololuController.h>
 #include <ros_pololu_servo/PololuMath.h>
 #include <string>
+#include <math.h>
 #include <ros/ros.h>
 #include <ros_pololu_servo/MotorRange.h>
 #include <algorithm>
@@ -59,26 +60,20 @@ bool PololuController::initialize()
 
     // Load parameters
     ROS_INFO("Loading pololu_motors_yaml...");
-
+    // Load named
     if (nh.hasParam("pololu_motors_yaml"))
     {
         nh.getParam("pololu_motors_yaml", pololu_config_dir);
-        success = PololuYamlParser::parse(pololu_config_dir, motors);
+        PololuYamlParser::parse(pololu_config_dir, motors);
     }
-    else
-    {
-        ROS_ERROR("pololu_config file not specified, exiting");
-        success = false;
-    }
-
     nh.param<string>("port_name", port_name, "/dev/ttyACM0");
     nh.param<int>("baud_rate", baud_rate, 115200);
     nh.param<int>("rate_hz", rate_hz, 10);
     nh.param<bool>("daisy_chain", daisy_chain, false);
-
+    nh.param<string>("topic_prefix", topic_prefix, "pololu/");
+    nh.param<string>("topic_name", topic_name, "command");
     // Create serial interface
     serial_interface = Polstro::SerialInterface::createSerialInterface(port_name, baud_rate);
-
     if (!serial_interface->isOpen())
     {
         ROS_ERROR("Failed to open interface, exiting");
@@ -87,10 +82,10 @@ bool PololuController::initialize()
 
     // Setup publisher and subscriber
     motor_state_list_pub = n.advertise<MotorStateList>("pololu/motor_states", 10);
-    motor_cmd_sub = n.subscribe("pololu/command", 10, &PololuController::motor_command_callback, this);
+    motor_cmd_sub = n.subscribe(topic_prefix+topic_name, 50, &PololuController::motor_command_callback, this);
 
     // Setup services
-    motor_range_srv = n.advertiseService("pololu/motor_range", &PololuController::motor_range_callback, this);
+    motor_range_srv = n.advertiseService(topic_prefix+"motor_range", &PololuController::motor_range_callback, this);
 
     return success;
 }
@@ -172,15 +167,44 @@ double PololuController::get_rate_hz()
     return rate_hz;
 }
 
+Motor PololuController::default_motor(){
+  Motor m;
+  m.pololu_id = 0;
+  m.motor_id = -1;
+  m.init = 1500;
+  m.min = 820;
+  m.max = 2175;
+  m.direction = 1.0;
+  m.calibration.min_pulse = 820;
+  m.calibration.max_pulse = 2175;
+  m.calibration.min_angle = -M_PI/2;
+  m.calibration.max_angle = M_PI/2;
+  return m;
+}
+
 void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
 {
     ROS_INFO("Recevied cmd name: %s, position: %f, speed: %f, accel: %f", msg->joint_name.c_str(), to_degrees(msg->position), msg->speed, msg->acceleration);
 
     map<string, Motor>::iterator iterator = motors.find(msg->joint_name);
+    // Allow to send commands to named and unnamed motors
+    bool success = true;
+    Motor motor;
+    if(iterator != motors.end()){
+      motor = motors[msg->joint_name];
+    }else{
+      int motor_id = std::atoi(msg->joint_name.c_str());
 
-    if(iterator != motors.end())
+      if (motor_id == 0 && msg->joint_name != "0" ){
+        success = false;
+      }else{
+        motor = default_motor();
+        motor.motor_id = motor_id;
+      }
+    }
+    if(success)
     {
-        Motor motor = motors[msg->joint_name];
+
         bool send_commands = true;
 
         if(msg->speed < 0.0 || 1.0 < msg->speed)
@@ -216,9 +240,10 @@ void PololuController::motor_command_callback(const MotorCommand::ConstPtr& msg)
         if(send_commands)
         {
             double pulse = PololuMath::to_pulse(new_position, motor);
-            double speed = PololuMath::interpolate(msg->speed, 0.0, 1.0, 1.0, 255.0); //Set speed, make sure doesn't below 1, which is max speed
-            double acceleration = PololuMath::interpolate(msg->acceleration, 0.0, 1.0, 1.0, 255.0); //Set acceleration, make sure doesn't go below 1, which is max acceleration
-            double pulse_m = PololuMath::clamp(pulse * 4.0, 4000, 8000);
+
+            double speed = PololuMath::interpolate(msg->speed, 0.0, 1.0, 0, 255.0); //Set speed, make sure doesn't below 0, which is max speed
+            double acceleration = PololuMath::interpolate(msg->acceleration, 0.0, 1.0, 0, 255.0); //Set acceleration, make sure doesn't go below 0, which is max acceleration
+            double pulse_m = PololuMath::clamp(pulse * 4.0, 3280, 8700);
 
             if(daisy_chain)
             {

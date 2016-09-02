@@ -56,12 +56,13 @@ class PololuController
         //ros::Rate rate;
 
         Polstro::SerialInterface* serial_interface;
-        std::string pololu_config_dir, port_name;
+        std::string pololu_config_dir, port_name, topic_prefix, topic_name;
         int baud_rate, rate_hz;
         bool daisy_chain;
 
         ros_pololu_servo::MotorStateList motor_state_list;
         map<string, Motor> motors;
+        Motor default_motor();
 
     public:
         PololuController();
