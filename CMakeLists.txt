@@ -122,6 +122,7 @@ add_library(ros_pololu_servo
    src/ros_pololu_servo/PololuYamlParser.cpp
    src/ros_pololu_servo/PololuController.cpp
  )
+add_dependencies(ros_pololu_servo ros_pololu_servo_generate_messages_cpp)
 
 
 ## Declare a cpp executable
